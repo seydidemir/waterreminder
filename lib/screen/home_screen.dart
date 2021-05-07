@@ -13,7 +13,6 @@ class _HomeScreenState extends State<HomeScreen> {
   double _todayScore = 0.0;
   double _userRequest = 2600;
   double targetValue = 0;
-  int _selectedIndex = 0;
   Color borderColor = Colors.blueAccent;
   double _lastAdded = 0;
   bool backBtn = false;
@@ -218,11 +217,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 Container(
                   margin: EdgeInsets.only(top: 5.0, bottom: 10.0),
+                  child: Text(
+                    '${_todayScore.round() * 10}ml / ${_userRequest.round()}ml',
+                    style: TextStyle(color: Colors.blueAccent, fontSize: 20.0),
+                  ),
                 ),
-                Text(
-                  '${_todayScore.round() * 10}ml / ${_userRequest.round()}ml',
-                  style: TextStyle(color: Colors.blueAccent, fontSize: 20.0),
-                )
               ],
             ),
             SizedBox(
@@ -243,10 +242,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     padding: EdgeInsets.all(15.0),
                     shape: CircleBorder(),
                     onPressed: () {
+                      _lastAdded = groupValue;
+
                       setState(
                         () => {
                           _todayScore += groupValue,
-                          _lastAdded = groupValue,
                           backBtn = true,
                           if (_todayScore.round() * 10 >= _userRequest)
                             {
@@ -288,7 +288,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     onPressed: () {
                       setState(
                         () => {
-                          _todayScore -= groupValue,
+                          _todayScore -= _lastAdded,
+                          _progress -= _lastAdded,
                           _lastAdded = 0,
                           backBtn = false,
                         },
