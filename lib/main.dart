@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:load/load.dart';
 import 'dart:io';
-import 'package:waterreminder/util/splash.dart';
+import 'package:waterreminder/utils/splash.dart';
 
 void main() async {
   runApp(new MyApp());
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: new EDBAPP(),
+      home: new WaterReminder(),
       locale: const Locale(
           'tr', ''), // change to locale you want. not all locales are supported
       localizationsDelegates: [
@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class EDBAPP extends StatelessWidget {
+class WaterReminder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ConnectivityAppWrapper(

@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:waterreminder/models/water.dart';
+import 'package:waterreminder/screens/history_screen.dart';
+import 'package:waterreminder/utils/dbHelper.dart';
 import 'package:wave_progress_widget/wave_progress.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -8,24 +11,59 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  DatabaseHelper _databaseHelper = DatabaseHelper();
+  // ignore: deprecated_member_use
+  List<WatersAmount> allWaterHistory = new List<WatersAmount>();
+
   double groupValue = 20.0;
   double _progress = 0.0;
   double _todayScore = 0.0;
   double _userRequest = 2600;
   double targetValue = 0;
   Color borderColor = Colors.blueAccent;
-  double _lastAdded = 0;
   bool backBtn = false;
 
   @override
   void initState() {
     super.initState();
+    getWatersAmount();
   }
 
   void _handleRadioValueChange(double value) {
     setState(() {
       groupValue = value;
       print(groupValue);
+    });
+  }
+
+  void getWatersAmount() {
+    double flag = 0.0;
+    var waterAmountFuture = _databaseHelper.getAllData();
+    waterAmountFuture.then((data) {
+      this.allWaterHistory = data;
+      for (var maxAmount in allWaterHistory) {
+        flag += maxAmount.amount;
+      }
+
+      setState(() {
+        _todayScore = flag;
+        _progress = _todayScore;
+      });
+    });
+  }
+
+  void saveObject() {
+    _addWater(WatersAmount(
+      groupValue,
+      DateTime.now().toIso8601String(),
+    ));
+  }
+
+  void _addWater(WatersAmount watersAmount) async {
+    await _databaseHelper.insert(watersAmount);
+
+    setState(() {
+      getWatersAmount();
     });
   }
 
@@ -242,11 +280,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     padding: EdgeInsets.all(15.0),
                     shape: CircleBorder(),
                     onPressed: () {
-                      _lastAdded = groupValue;
-
+                      saveObject();
                       setState(
                         () => {
-                          _todayScore += groupValue,
                           backBtn = true,
                           if (_todayScore.round() * 10 >= _userRequest)
                             {
@@ -286,22 +322,43 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     onPressed: () {
+                      _databaseHelper.delete();
                       setState(
                         () => {
-                          _todayScore -= _lastAdded,
-                          _progress -= _lastAdded,
-                          _lastAdded = 0,
-                          backBtn = false,
+                          // _todayScore -= _lastAdded,
+                          // _progress -= _lastAdded,
+                          // _lastAdded = 0,
+                          backBtn = true,
                         },
                       );
+                      getWatersAmount();
                     },
                   ),
                 ),
               ),
             ),
+            Center(
+              child: TextButton(
+                child: Text(
+                  "History",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 22.0,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => HistoryScreen()),
+                  );
+                },
+              ),
+            )
           ],
         ),
       ),
     );
   }
 }
+
+enum PageArea { home, history, profile }

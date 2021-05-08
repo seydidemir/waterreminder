@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:waterreminder/screen/home_screen.dart';
+import 'package:waterreminder/screens/home_screen.dart';
 
 import 'helper.dart';
 
