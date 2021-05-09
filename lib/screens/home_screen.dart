@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:waterreminder/models/water.dart';
 import 'package:waterreminder/screens/history_screen.dart';
@@ -83,166 +84,8 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 10.0),
-              height: 150.0,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: <Widget>[
-                  GestureDetector(
-                    onTap: () {
-                      setState(
-                        () {
-                          groupValue = 10.0;
-                        },
-                      );
-                    },
-                    child: Container(
-                      width: 160.0,
-                      color: Color(0xFF505160),
-                      alignment: Alignment.center,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Spacer(),
-                          Text(
-                            "100ml",
-                            style: TextStyle(fontSize: 18.0),
-                          ),
-                          Spacer(),
-                          SvgPicture.asset(
-                            'assets/img/cup.svg',
-                            width: 45,
-                            color: Colors.white,
-                          ),
-                          Spacer(),
-                          Radio(
-                            activeColor: Colors.white,
-                            value: 10.0,
-                            groupValue: groupValue,
-                            onChanged: _handleRadioValueChange,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      setState(
-                        () {
-                          groupValue = 20.0;
-                        },
-                      );
-                    },
-                    child: Container(
-                      width: 160.0,
-                      color: Color(0xFF68829E),
-                      alignment: Alignment.center,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Spacer(),
-                          Text(
-                            "200ml",
-                            style: TextStyle(
-                              fontSize: 18.0,
-                              color: Colors.white,
-                            ),
-                          ),
-                          Spacer(),
-                          SvgPicture.asset(
-                            'assets/img/250ml.svg',
-                            width: 45,
-                          ),
-                          Spacer(),
-                          Radio(
-                            activeColor: Colors.white,
-                            value: 20.0,
-                            groupValue: groupValue,
-                            onChanged: _handleRadioValueChange,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      setState(
-                        () {
-                          groupValue = 33.0;
-                        },
-                      );
-                    },
-                    child: Container(
-                      width: 160.0,
-                      color: Color(0xFFAEBD38),
-                      alignment: Alignment.center,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Spacer(),
-                          Text(
-                            "330ml",
-                            style: TextStyle(fontSize: 18.0),
-                          ),
-                          Spacer(),
-                          SvgPicture.asset(
-                            'assets/img/drink-water.svg',
-                            width: 45,
-                          ),
-                          Spacer(),
-                          Radio(
-                            activeColor: Colors.white,
-                            value: 33.0,
-                            groupValue: groupValue,
-                            onChanged: _handleRadioValueChange,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      setState(
-                        () {
-                          groupValue = 50.0;
-                        },
-                      );
-                    },
-                    child: Container(
-                      width: 160.0,
-                      color: Color(0xFF598234),
-                      alignment: Alignment.center,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Spacer(),
-                          Text(
-                            "500ml",
-                            style: TextStyle(fontSize: 18.0),
-                          ),
-                          Spacer(),
-                          SvgPicture.asset(
-                            'assets/img/bottle.svg',
-                            width: 45,
-                          ),
-                          Spacer(),
-                          Radio(
-                            activeColor: Colors.white,
-                            value: 50.0,
-                            groupValue: groupValue,
-                            onChanged: _handleRadioValueChange,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+            SizedBox(
+              height: 20,
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -262,103 +105,296 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
+            Container(
+              margin: EdgeInsets.only(left: 30, right: 30, top: 10, bottom: 15),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(
+                    20,
+                  ),
+                  color: Colors.white70.withOpacity(0.6)),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        alignment: Alignment.center,
+                        width: MediaQuery.of(context).size.width / 3,
+                        height: 100,
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(
+                              () {
+                                groupValue = 10.0;
+                              },
+                            );
+                          },
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Spacer(),
+                              SvgPicture.asset(
+                                'assets/img/coffee-cup.svg',
+                                width: 35,
+                                color: Colors.blue,
+                              ),
+                              Spacer(),
+                              Text(
+                                "100ml",
+                                style: TextStyle(fontSize: 13.0),
+                              ),
+                              Radio(
+                                activeColor: Colors.blue,
+                                value: 10.0,
+                                groupValue: groupValue,
+                                onChanged: _handleRadioValueChange,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Container(
+                        height: 115,
+                        child: VerticalDivider(color: Colors.grey),
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width / 3,
+                        height: 100,
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(
+                              () {
+                                groupValue = 20.0;
+                              },
+                            );
+                          },
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Spacer(),
+                              SvgPicture.asset('assets/img/glass-of-water.svg',
+                                  width: 35, color: Colors.blue),
+                              Spacer(),
+                              Text(
+                                "200ml",
+                                style: TextStyle(fontSize: 13.0),
+                              ),
+                              Radio(
+                                activeColor: Colors.blue,
+                                value: 20.0,
+                                groupValue: groupValue,
+                                onChanged: _handleRadioValueChange,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Divider(
+                    color: Colors.grey,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width / 3,
+                        height: 100,
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(
+                              () {
+                                groupValue = 33.0;
+                              },
+                            );
+                          },
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Spacer(),
+                              SvgPicture.asset(
+                                'assets/img/can.svg',
+                                width: 35,
+                                color: Colors.blue,
+                              ),
+                              Spacer(),
+                              Text(
+                                "330ml",
+                                style: TextStyle(fontSize: 13.0),
+                              ),
+                              Radio(
+                                activeColor: Colors.blue,
+                                value: 33.0,
+                                groupValue: groupValue,
+                                onChanged: _handleRadioValueChange,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Container(
+                        height: 115,
+                        child: VerticalDivider(color: Colors.grey),
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width / 3,
+                        height: 100,
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(
+                              () {
+                                groupValue = 50.0;
+                              },
+                            );
+                          },
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Spacer(),
+                              SvgPicture.asset(
+                                'assets/img/water-bottle.svg',
+                                width: 35,
+                                color: Colors.blue,
+                              ),
+                              Spacer(),
+                              Text(
+                                "500ml",
+                                style: TextStyle(fontSize: 13.0),
+                              ),
+                              Radio(
+                                activeColor: Colors.blue,
+                                value: 50.0,
+                                groupValue: groupValue,
+                                onChanged: _handleRadioValueChange,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
             SizedBox(
-              height: 20,
+              height: 0,
             ),
             Center(
               child: Visibility(
                 visible: true,
                 child: Container(
-                  child: RawMaterialButton(
-                    elevation: 2.0,
-                    fillColor: Colors.blue,
-                    child: Icon(
-                      Icons.add,
-                      size: 45.0,
-                      color: Colors.white,
+                    child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    RawMaterialButton(
+                      elevation: 2.0,
+                      fillColor: Colors.white,
+                      child: Icon(
+                        Icons.notifications,
+                        size: 30.0,
+                        color: Colors.black54,
+                      ),
+                      padding: EdgeInsets.all(7.0),
+                      shape: CircleBorder(),
+                      onPressed: () {},
                     ),
-                    padding: EdgeInsets.all(15.0),
-                    shape: CircleBorder(),
-                    onPressed: () {
-                      saveObject();
-                      setState(
-                        () => {
-                          backBtn = true,
-                          if (_todayScore.round() * 10 >= _userRequest)
-                            {
-                              borderColor = Colors.green[800],
-                            },
-                          if ((_progress.round() * 10) + groupValue >=
-                              _userRequest)
-                            {
-                              _progress = _userRequest / 10,
-                              print("hedef tamamlandı"),
-                            }
-                          else if ((_progress.round() * 10) + groupValue <=
-                              _userRequest)
-                            {
-                              _progress += groupValue,
-                            }
-                        },
-                      );
-                    },
-                  ),
-                ),
+                    RawMaterialButton(
+                      elevation: 2.0,
+                      fillColor: Colors.blue,
+                      child: Icon(
+                        Icons.add,
+                        size: 35.0,
+                        color: Colors.white,
+                      ),
+                      padding: EdgeInsets.all(10.0),
+                      shape: CircleBorder(),
+                      onPressed: () {
+                        saveObject();
+                        setState(
+                          () => {
+                            backBtn = true,
+                            if (_todayScore.round() * 10 >= _userRequest)
+                              {
+                                borderColor = Colors.green[800],
+                              },
+                            if ((_progress.round() * 10) + groupValue >=
+                                _userRequest)
+                              {
+                                _progress = _userRequest / 10,
+                                print("hedef tamamlandı"),
+                              }
+                            else if ((_progress.round() * 10) + groupValue <=
+                                _userRequest)
+                              {
+                                _progress += groupValue,
+                              }
+                          },
+                        );
+                      },
+                    ),
+                    Visibility(
+                      visible: true,
+                      child: Container(
+                        child: RawMaterialButton(
+                            elevation: 2.0,
+                            fillColor: Colors.white,
+                            child: Icon(
+                              FontAwesome.angle_double_left,
+                              size: 30.0,
+                              color: setColor(),
+                            ),
+                            padding: EdgeInsets.all(7.0),
+                            shape: CircleBorder(),
+                            onPressed: backBtn
+                                ? () {
+                                    _databaseHelper.delete();
+
+                                    getWatersAmount();
+                                    backBtn = false;
+                                  }
+                                : null),
+                      ),
+                    ),
+                  ],
+                )),
               ),
             ),
             SizedBox(
               height: 15.0,
             ),
-            Center(
-              child: Visibility(
-                visible: backBtn,
-                child: Container(
-                  child: TextButton(
-                    child: Text(
-                      "Geri Al",
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontSize: 22.0,
-                      ),
-                    ),
-                    onPressed: () {
-                      _databaseHelper.delete();
-                      setState(
-                        () => {
-                          // _todayScore -= _lastAdded,
-                          // _progress -= _lastAdded,
-                          // _lastAdded = 0,
-                          backBtn = true,
-                        },
-                      );
-                      getWatersAmount();
-                    },
-                  ),
+            TextButton(
+              child: Text(
+                "History",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 22.0,
                 ),
               ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => HistoryScreen()),
+                );
+              },
             ),
-            Center(
-              child: TextButton(
-                child: Text(
-                  "History",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 22.0,
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => HistoryScreen()),
-                  );
-                },
-              ),
-            )
           ],
         ),
       ),
     );
   }
-}
 
-enum PageArea { home, history, profile }
+  setColor() {
+    if (backBtn) {
+      return Colors.red;
+    } else {
+      return Colors.grey;
+    }
+  }
+}
