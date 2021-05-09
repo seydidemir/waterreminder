@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:waterreminder/models/water.dart';
@@ -39,6 +38,20 @@ class _HistoryScreenState extends State<HistoryScreen> {
         title: const Text('History'),
         shadowColor: Colors.blue,
         backgroundColor: Colors.blue,
+        actions: <Widget>[
+          Padding(
+              padding: EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                onTap: () {
+                  _databaseHelper.deleteAllRecords();
+                  getWatersAmount();
+                },
+                child: Icon(
+                  Icons.delete_forever,
+                  size: 26.0,
+                ),
+              )),
+        ],
       ),
       body: Container(
         padding: EdgeInsets.all(5),

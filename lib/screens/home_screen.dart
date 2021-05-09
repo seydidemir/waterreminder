@@ -39,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void getWatersAmount() {
     double flag = 0.0;
-    var waterAmountFuture = _databaseHelper.getAllData();
+    var waterAmountFuture = _databaseHelper.getTodayDayData();
     waterAmountFuture.then((data) {
       this.allWaterHistory = data;
       for (var maxAmount in allWaterHistory) {

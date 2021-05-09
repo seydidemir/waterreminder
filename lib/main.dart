@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:load/load.dart';
+import 'package:waterreminder/utils/bottom_navbar.dart';
 import 'dart:io';
 import 'package:waterreminder/utils/splash.dart';
 
@@ -40,23 +41,21 @@ class WaterReminder extends StatelessWidget {
       app: LoadingProvider(
         themeData: LoadingThemeData(),
         child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'Water Reminder',
-          theme: ThemeData(
-            primaryTextTheme: TextTheme(
-              headline6: TextStyle(color: Colors.white, fontSize: 20),
+            debugShowCheckedModeBanner: false,
+            title: 'Water Reminder',
+            theme: ThemeData(
+              fontFamily: 'Roboto',
             ),
-          ),
-          home: AdvancedSplashScreen(
-            // child: Helper.user != null ? HomeScreen() : LoginScreen(),
-            seconds: 2,
-            colorList: [Colors.white],
-            appIcon: "assets/img/splash_img.png",
-            appTitle: "Powered by SAYTHEIRON",
-            appTitleStyle: TextStyle(fontSize: 13, color: Colors.black),
-            animate: true,
-          ),
-        ),
+            // home: AdvancedSplashScreen(
+            //   seconds: 2,
+            //   colorList: [Colors.white],
+            //   appIcon: "assets/img/splash_img.png",
+            //   appTitle: "Powered by SAYTHEIRON",
+            //   appTitleStyle: TextStyle(fontSize: 13, color: Colors.black),
+            //   animate: true,
+            // ),
+
+            home: BottomNavbar()),
       ),
     );
   }

@@ -1,3 +1,4 @@
+import 'package:jiffy/jiffy.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:waterreminder/models/water.dart';
@@ -9,6 +10,10 @@ class DatabaseHelper {
   String _columnID = "id";
   String _columnAmount = "amount";
   String _columnCreatedDate = "createdDate";
+
+  String nowDate = Jiffy(DateTime.now()).format('yyyy-MM-dd HH:mm:ss');
+  String todayDate =
+      Jiffy(DateTime.now().add(Duration(days: 1))).format('yyyy-MM-dd ');
 
   Future<Database> get database async {
     if (_database == null) {
@@ -38,9 +43,10 @@ class DatabaseHelper {
     });
   }
 
-  Future<List<WatersAmount>> getLastDayData() async {
+  Future<List<WatersAmount>> getTodayDayData() async {
     Database db = await this.database;
-    var result = await db.query("$_waterAmount");
+    var result = await db.rawQuery(
+        "select * from $_waterAmount where `$_columnCreatedDate` < '$todayDate' and `$_columnCreatedDate` >= '$nowDate' ");
     return List.generate(result.length, (i) {
       return WatersAmount.fromMap(result[i]);
     });
@@ -63,6 +69,12 @@ class DatabaseHelper {
     Database db = await this.database;
     var result = await db.update("$_waterAmount", waterAmount.toMap(),
         where: "id=?", whereArgs: [waterAmount.id]);
+    return result;
+  }
+
+  Future<int> deleteAllRecords() async {
+    Database db = await this.database;
+    var result = await db.rawDelete("delete from $_waterAmount");
     return result;
   }
 }
