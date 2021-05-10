@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:load/load.dart';
 import 'package:waterreminder/screens/analiz_screen.dart';
 import 'package:waterreminder/screens/history_screen.dart';
 import 'package:waterreminder/screens/home_screen.dart';

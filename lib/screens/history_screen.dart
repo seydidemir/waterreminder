@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:load/load.dart';
 import 'package:waterreminder/models/water.dart';
 import 'package:waterreminder/utils/dbHelper.dart';
+import 'package:wave_progress_widget/wave_progress_widget.dart';
 
 class HistoryScreen extends StatefulWidget {
   @override
@@ -14,22 +16,50 @@ class _HistoryScreenState extends State<HistoryScreen> {
   // ignore: deprecated_member_use
   List<WatersAmount> allWaterHistory = new List<WatersAmount>();
 
+  double groupValue = 20.0;
+  double _progress = 0.0;
+  double _todayScore = 0.0;
+  double _userRequest = 2600;
+  String _todayPercentage = "";
+  double targetValue = 0;
+  Color borderColor = Colors.blueAccent;
+
   @override
   void initState() {
     super.initState();
-    getWatersAmount();
+
+    getWaweWatersAmount();
   }
 
-  void getWatersAmount() async {
-    var waterAmountFuture = _databaseHelper.getAllData();
-    await waterAmountFuture.then(
-      (data) {
-        setState(() {
-          this.allWaterHistory = data;
-        });
-      },
-    );
+  void getWaweWatersAmount() {
+    double flag = 0.0;
+    var waterAmountFuture = _databaseHelper.getTodayDayData();
+    waterAmountFuture.then((data) {
+      this.allWaterHistory = data;
+      for (var maxAmount in allWaterHistory) {
+        flag += maxAmount.amount;
+      }
+
+      setState(() {
+        _todayScore = flag;
+        _progress = _todayScore;
+        var percentage =
+            (((_todayScore * 100) / _userRequest) * 10).toStringAsFixed(1);
+        _todayPercentage = percentage.toString();
+      });
+    });
   }
+
+  // void getWatersAmount() async {
+  //   var waterAmountFuture = _databaseHelper.getAllData();
+  //   await waterAmountFuture.then(
+  //     (data) {
+  //       setState(() {
+  //         this.allWaterHistory = data;
+  //       });
+  //     },
+  //   );
+  // }
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,7 +74,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
               child: GestureDetector(
                 onTap: () {
                   _databaseHelper.deleteAllRecords();
-                  getWatersAmount();
+
+                  getWaweWatersAmount();
                 },
                 child: Icon(
                   Icons.delete_forever,
@@ -57,43 +88,135 @@ class _HistoryScreenState extends State<HistoryScreen> {
         padding: EdgeInsets.all(5),
         child: Column(
           children: [
+            Container(
+              height: MediaQuery.of(context).size.height / 3.6,
+              child: Column(
+                children: <Widget>[
+                  Text(
+                    "% $_todayPercentage",
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Spacer(),
+                  WaveProgress(
+                    120.0,
+                    borderColor,
+                    Colors.blue,
+                    (1000 / _userRequest) * _progress,
+                  ),
+                  ListTile(
+                    title: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Progress",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                            Text(
+                              "Daily Goal",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 14, fontWeight: FontWeight.normal),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "${_todayScore.round() * 10}ml",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              "${_userRequest.round()}ml",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  Divider(
+                    height: 1,
+                    color: Colors.blue,
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.only(left: 15, top: 5, bottom: 5),
+              child: Row(
+                children: [
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "Daily History",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue,
+                    ),
+                  ),
+                ],
+              ),
+            ),
             Expanded(
               child: RefreshIndicator(
                 onRefresh: () async {
-                  getWatersAmount();
+                  getWaweWatersAmount();
                 },
                 child: ListView.builder(
                   itemCount: allWaterHistory.length,
                   itemBuilder: (context, index) {
                     return Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
                       child: ListTile(
-                          leading: SvgPicture.asset(
-                            'assets/img/250ml.svg',
-                            width: 45,
-                          ),
-                          title: Text(
-                            (allWaterHistory[index].amount.round() * 10)
-                                    .toString() +
-                                "ml",
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                          subtitle: Column(
-                            children: [
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: Container(
-                                  child: Text(
-                                    Jiffy(allWaterHistory[index].createdDate)
-                                        .format('dd.MM.yyyy HH:mm:ss'),
-                                    style: TextStyle(
-                                      color: Colors.green,
-                                    ),
-                                  ),
-                                ),
-                              )
-                            ],
-                          )),
+                        leading: SvgPicture.asset(
+                          'assets/img/250ml.svg',
+                          width: 45,
+                        ),
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              (allWaterHistory[index].amount.round() * 10)
+                                      .toString() +
+                                  "ml ",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              Jiffy(allWaterHistory[index].createdDate)
+                                  .format('HH:mm'),
+                              textAlign: TextAlign.right,
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.normal),
+                            ),
+                          ],
+                        ),
+                      ),
                     );
                   },
                 ),
