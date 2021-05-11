@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:load/load.dart';
-import 'package:waterreminder/screens/analiz_screen.dart';
+import 'package:waterreminder/screens/profile_screen.dart';
 import 'package:waterreminder/screens/history_screen.dart';
 import 'package:waterreminder/screens/home_screen.dart';
 
@@ -14,7 +13,7 @@ class _BottomNavbarState extends State<BottomNavbar> {
   List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
     HistoryScreen(),
-    AnalysisScreen(),
+    ProfilScreen(),
   ];
   void _onItemTap(int index) {
     setState(() {

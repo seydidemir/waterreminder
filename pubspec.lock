@@ -64,6 +64,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.0"
+  fbutton:
+    dependency: "direct main"
+    description:
+      name: fbutton
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.1"
+  fcontrol:
+    dependency: transitive
+    description:
+      name: fcontrol
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   ffi:
     dependency: transitive
     description:
@@ -329,6 +343,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
+  settings_ui:
+    dependency: "direct main"
+    description:
+      name: settings_ui
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   shared_preferences:
     dependency: "direct main"
     description:

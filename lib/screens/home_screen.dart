@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:waterreminder/models/user.dart';
 import 'package:waterreminder/models/water.dart';
 import 'package:waterreminder/screens/history_screen.dart';
 import 'package:waterreminder/utils/dbHelper.dart';
@@ -15,11 +16,15 @@ class _HomeScreenState extends State<HomeScreen> {
   DatabaseHelper _databaseHelper = DatabaseHelper();
   // ignore: deprecated_member_use
   List<WatersAmount> allWaterHistory = new List<WatersAmount>();
+  // ignore: deprecated_member_use
+  List<User> allUserInfo = new List<User>();
+
+  String dailyAmount = "";
 
   double groupValue = 20.0;
   double _progress = 0.0;
   double _todayScore = 0.0;
-  double _userRequest = 2600;
+  double _userRequest = 0.0;
   double targetValue = 0;
   Color borderColor = Colors.blueAccent;
   bool backBtn = false;
@@ -27,7 +32,19 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    getUserInfo();
     getDailyWatersAmount();
+  }
+
+  void getUserInfo() {
+    var userInfo = _databaseHelper.getUserInfo();
+    userInfo.then((data) {
+      this.allUserInfo = data;
+      for (var daily in allUserInfo) {
+        dailyAmount = daily.dailyAmount;
+        _userRequest = double.parse(dailyAmount);
+      }
+    });
   }
 
   void _handleRadioValueChange(double value) {

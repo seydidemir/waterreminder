@@ -2,6 +2,7 @@ import 'package:jiffy/jiffy.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:waterreminder/models/water.dart';
+import 'package:waterreminder/models/user.dart';
 
 class DatabaseHelper {
   static Database _database;
@@ -10,6 +11,10 @@ class DatabaseHelper {
   String _columnID = "id";
   String _columnAmount = "amount";
   String _columnCreatedDate = "createdDate";
+
+  String _user = "user";
+  String _userWeight = "userWeight";
+  String _dailyAmount = "dailyAmount";
 
   String nowDate = Jiffy(DateTime.now()).format('yyyy-MM-dd HH:mm:ss');
   String todayDate =
@@ -23,18 +28,20 @@ class DatabaseHelper {
   }
 
   Future<Database> initializeDatabase() async {
-    String dbPath = join(await getDatabasesPath(), "waterAmount.db");
+    String dbPath = join(await getDatabasesPath(), "waterAmount2.db");
     var waterAmountDb =
-        await openDatabase(dbPath, version: 1, onCreate: createDb);
+        await openDatabase(dbPath, version: 3, onCreate: createDb);
     return waterAmountDb;
   }
 
   void createDb(Database db, int version) async {
     await db.execute(
         "Create table $_waterAmount($_columnID integer primary key, $_columnAmount text, $_columnCreatedDate text)");
+    await db.execute(
+        "Create table $_user($_columnID integer primary key, $_userWeight text, $_dailyAmount text, $_columnCreatedDate text)");
   }
 
-  //Crud Methods
+  //Crud Methods Water
   Future<List<WatersAmount>> getAllData() async {
     Database db = await this.database;
     var result = await db.query("$_waterAmount");
@@ -75,6 +82,28 @@ class DatabaseHelper {
   Future<int> deleteAllRecords() async {
     Database db = await this.database;
     var result = await db.rawDelete("delete from $_waterAmount");
+    return result;
+  }
+
+  //Crud For User
+
+  Future<List<User>> getUserInfo() async {
+    Database db = await this.database;
+    var result = await db.rawQuery("select * from $_user");
+    return List.generate(result.length, (i) {
+      return User.fromMap(result[i]);
+    });
+  }
+
+  Future<int> insertUser(User user) async {
+    Database db = await this.database;
+    var result = await db.insert("$_user", user.toMap());
+    return result;
+  }
+
+  Future<int> deleteUser() async {
+    Database db = await this.database;
+    var result = await db.rawDelete("delete from $_user)");
     return result;
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:load/load.dart';
+import 'package:waterreminder/models/user.dart';
 import 'package:waterreminder/models/water.dart';
 import 'package:waterreminder/utils/dbHelper.dart';
 import 'package:wave_progress_widget/wave_progress_widget.dart';
@@ -15,11 +16,15 @@ class _HistoryScreenState extends State<HistoryScreen> {
   DatabaseHelper _databaseHelper = DatabaseHelper();
   // ignore: deprecated_member_use
   List<WatersAmount> allWaterHistory = new List<WatersAmount>();
+  // ignore: deprecated_member_use
+  List<User> allUserInfo = new List<User>();
+
+  String dailyAmount = "";
 
   double groupValue = 20.0;
   double _progress = 0.0;
   double _todayScore = 0.0;
-  double _userRequest = 2600;
+  double _userRequest = 0.0;
   String _todayPercentage = "";
   double targetValue = 0;
   Color borderColor = Colors.blueAccent;
@@ -27,8 +32,19 @@ class _HistoryScreenState extends State<HistoryScreen> {
   @override
   void initState() {
     super.initState();
-
+    getUserInfo();
     getWaweWatersAmount();
+  }
+
+  void getUserInfo() {
+    var userInfo = _databaseHelper.getUserInfo();
+    userInfo.then((data) {
+      this.allUserInfo = data;
+      for (var daily in allUserInfo) {
+        dailyAmount = daily.dailyAmount;
+        _userRequest = double.parse(dailyAmount);
+      }
+    });
   }
 
   void getWaweWatersAmount() {
@@ -43,8 +59,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
       setState(() {
         _todayScore = flag;
         _progress = _todayScore;
-        var percentage =
+        String percentage =
             (((_todayScore * 100) / _userRequest) * 10).toStringAsFixed(1);
+
         _todayPercentage = percentage.toString();
       });
     });

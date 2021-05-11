@@ -41,21 +41,22 @@ class WaterReminder extends StatelessWidget {
       app: LoadingProvider(
         themeData: LoadingThemeData(),
         child: MaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: 'Water Reminder',
-            theme: ThemeData(
-              fontFamily: 'Roboto',
-            ),
-            // home: AdvancedSplashScreen(
-            //   seconds: 2,
-            //   colorList: [Colors.white],
-            //   appIcon: "assets/img/splash_img.png",
-            //   appTitle: "Powered by SAYTHEIRON",
-            //   appTitleStyle: TextStyle(fontSize: 13, color: Colors.black),
-            //   animate: true,
-            // ),
+          debugShowCheckedModeBanner: false,
+          title: 'Water Reminder',
+          theme: ThemeData(
+            fontFamily: 'Roboto',
+          ),
+          // home: AdvancedSplashScreen(
+          //   seconds: 2,
+          //   colorList: [Colors.white],
+          //   appIcon: "assets/img/splash_img.png",
+          //   appTitle: "Powered by SAYTHEIRON",
+          //   appTitleStyle: TextStyle(fontSize: 13, color: Colors.black),
+          //   animate: true,
+          // ),
 
-            home: BottomNavbar()),
+          home: BottomNavbar(),
+        ),
       ),
     );
   }
