@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:waterreminder/screens/profile_screen.dart';
 import 'package:waterreminder/screens/history_screen.dart';
 import 'package:waterreminder/screens/home_screen.dart';
@@ -31,21 +32,21 @@ class _BottomNavbarState extends State<BottomNavbar> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.home,
+              FontAwesome.tint,
             ),
             label: 'Home',
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.message,
+              FontAwesome.history,
             ),
-            label: 'history',
+            label: 'History',
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.person,
+              FontAwesome.cog,
             ),
-            label: 'Profile',
+            label: 'Settings',
           ),
         ],
         currentIndex: _selectedIndex,

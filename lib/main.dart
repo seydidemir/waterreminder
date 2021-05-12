@@ -82,6 +82,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   TextEditingController weight = TextEditingController();
   TextEditingController age = TextEditingController();
   int initialPage;
+  TimeOfDay d1;
+  TimeOfDay d2;
 
   void saveObject(var result) {
     _addUserInfo(User(
