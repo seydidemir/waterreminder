@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:waterreminder/main.dart';
 import 'package:waterreminder/screens/home_screen.dart';
+import 'package:waterreminder/utils/bottom_navbar.dart';
 
 import 'helper.dart';
 
@@ -51,6 +54,7 @@ class _AdvancedSplashScreenState extends State<AdvancedSplashScreen>
   @override
   void initState() {
     super.initState();
+    initStartApp();
     buildStopList();
 
     handleScreenReplacement();
@@ -79,6 +83,14 @@ class _AdvancedSplashScreenState extends State<AdvancedSplashScreen>
   void dispose() {
     _animationController.dispose();
     super.dispose();
+  }
+
+  int initScreen = 0;
+
+  void initStartApp() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    initScreen = prefs.getInt('pageState');
   }
 
   @override
@@ -161,28 +173,21 @@ class _AdvancedSplashScreenState extends State<AdvancedSplashScreen>
     // }
     Timer(Duration(seconds: widget.seconds, milliseconds: widget.milliseconds),
         () {
-      // if (Helper.user != null) {
-      //   Navigator.pushReplacement(
-      //     context,
-      //     MaterialPageRoute(
-      //       builder: (context) => HomeScreen(),
-      //     ),
-      //   );
-      // } else {
-      //   Navigator.pushReplacement(
-      //     context,
-      //     MaterialPageRoute(
-      //       builder: (context) => LoginScreen(),
-      //     ),
-      //   );
-      // }
-
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => HomeScreen(),
-        ),
-      );
+      if (initScreen == 1) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BottomNavbar(),
+          ),
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => OnboardingScreen(),
+          ),
+        );
+      }
     });
   }
 

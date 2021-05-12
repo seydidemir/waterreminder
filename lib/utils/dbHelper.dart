@@ -1,5 +1,5 @@
 import 'package:jiffy/jiffy.dart';
-import 'package:path/path.dart';
+import 'package:path/path.dart' as p;
 import 'package:sqflite/sqflite.dart';
 import 'package:waterreminder/models/water.dart';
 import 'package:waterreminder/models/user.dart';
@@ -7,7 +7,7 @@ import 'package:waterreminder/models/user.dart';
 class DatabaseHelper {
   static Database _database;
 
-  String _waterAmount = "waterAmount";
+  String _waterAmount = "waterAmount2";
   String _columnID = "id";
   String _columnAmount = "amount";
   String _columnCreatedDate = "createdDate";
@@ -28,9 +28,10 @@ class DatabaseHelper {
   }
 
   Future<Database> initializeDatabase() async {
-    String dbPath = join(await getDatabasesPath(), "waterAmount2.db");
+    var databasesPath = await getDatabasesPath();
+    String dbPath = p.join(databasesPath, "waterAmount2.db");
     var waterAmountDb =
-        await openDatabase(dbPath, version: 3, onCreate: createDb);
+        await openDatabase(dbPath, version: 1, onCreate: createDb);
     return waterAmountDb;
   }
 

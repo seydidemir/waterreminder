@@ -61,8 +61,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
         _progress = _todayScore;
         String percentage =
             (((_todayScore * 100) / _userRequest) * 10).toStringAsFixed(1);
-
-        _todayPercentage = percentage.toString();
+        var goal = double.parse(percentage);
+        if (goal >= 100) {
+          goal = 100;
+          _todayPercentage = goal.toString();
+        } else {
+          _todayPercentage = percentage.toString();
+        }
       });
     });
   }
@@ -110,7 +115,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
               child: Column(
                 children: <Widget>[
                   Text(
-                    "% $_todayPercentage",
+                    "%  $_todayPercentage",
                     textAlign: TextAlign.left,
                     style: TextStyle(
                       fontSize: 18,

@@ -4,7 +4,6 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:waterreminder/models/user.dart';
 import 'package:waterreminder/models/water.dart';
-import 'package:waterreminder/screens/history_screen.dart';
 import 'package:waterreminder/utils/dbHelper.dart';
 import 'package:wave_progress_widget/wave_progress.dart';
 
@@ -26,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   double _todayScore = 0.0;
   double _userRequest = 0.0;
   double targetValue = 0;
-  Color borderColor = Colors.blueAccent;
+  Color borderColor = Colors.greenAccent;
   bool backBtn = false;
 
   @override
@@ -572,10 +571,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         setState(
                           () => {
                             backBtn = true,
-                            if (_todayScore.round() * 10 >= _userRequest)
-                              {
-                                borderColor = Colors.green[800],
-                              },
                             if ((_progress.round() * 10) + groupValue >=
                                 _userRequest)
                               {
@@ -586,7 +581,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 _userRequest)
                               {
                                 _progress += groupValue,
-                              }
+                              },
                           },
                         );
                       },
