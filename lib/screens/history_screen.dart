@@ -204,44 +204,53 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 onRefresh: () async {
                   getWaweWatersAmount();
                 },
-                child: ListView.builder(
-                  itemCount: allWaterHistory.length,
-                  itemBuilder: (context, index) {
-                    return Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      child: ListTile(
-                        leading: SvgPicture.asset(
-                          'assets/img/250ml.svg',
-                          width: 45,
+                child: allWaterHistory.isEmpty
+                    ? Center(
+                        child: Text(
+                          "Don't forget to drink water",
+                          style: TextStyle(color: Colors.grey, fontSize: 16),
                         ),
-                        title: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              (allWaterHistory[index].amount.round() * 10)
-                                      .toString() +
-                                  "ml ",
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
+                      )
+                    : ListView.builder(
+                        itemCount: allWaterHistory.length,
+                        itemBuilder: (context, index) {
+                          return Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                            child: ListTile(
+                              leading: SvgPicture.asset(
+                                'assets/img/250ml.svg',
+                                width: 45,
+                              ),
+                              title: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    (allWaterHistory[index].amount.round() * 10)
+                                            .toString() +
+                                        "ml ",
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    Jiffy(allWaterHistory[index].createdDate)
+                                        .format('HH:mm'),
+                                    textAlign: TextAlign.right,
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.normal),
+                                  ),
+                                ],
                               ),
                             ),
-                            Text(
-                              Jiffy(allWaterHistory[index].createdDate)
-                                  .format('HH:mm'),
-                              textAlign: TextAlign.right,
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.normal),
-                            ),
-                          ],
-                        ),
+                          );
+                        },
                       ),
-                    );
-                  },
-                ),
               ),
             ),
           ],

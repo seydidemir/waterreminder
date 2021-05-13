@@ -1,13 +1,14 @@
 import 'package:jiffy/jiffy.dart';
 import 'package:path/path.dart' as p;
 import 'package:sqflite/sqflite.dart';
+import 'package:waterreminder/models/notofication.dart';
 import 'package:waterreminder/models/water.dart';
 import 'package:waterreminder/models/user.dart';
 
 class DatabaseHelper {
   static Database _database;
 
-  String _waterAmount = "waterAmount2";
+  String _waterAmount = "waterAmount";
   String _columnID = "id";
   String _columnAmount = "amount";
   String _columnCreatedDate = "createdDate";
@@ -15,6 +16,13 @@ class DatabaseHelper {
   String _user = "user";
   String _userWeight = "userWeight";
   String _dailyAmount = "dailyAmount";
+  String _height = "height";
+  String _age = "age";
+
+  String _notification = "notification";
+  String _wakeUpTime = "wakeUpTime";
+  String _sleepTime = "sleepTime";
+  String _notificationLoop = "notificationLoop";
 
   String nowDate = Jiffy(DateTime.now()).format('yyyy-MM-dd HH:mm:ss');
   String todayDate =
@@ -29,9 +37,9 @@ class DatabaseHelper {
 
   Future<Database> initializeDatabase() async {
     var databasesPath = await getDatabasesPath();
-    String dbPath = p.join(databasesPath, "waterAmount2.db");
+    String dbPath = p.join(databasesPath, "waterAmount.db");
     var waterAmountDb =
-        await openDatabase(dbPath, version: 1, onCreate: createDb);
+        await openDatabase(dbPath, version: 5, onCreate: createDb);
     return waterAmountDb;
   }
 
@@ -39,7 +47,9 @@ class DatabaseHelper {
     await db.execute(
         "Create table $_waterAmount($_columnID integer primary key, $_columnAmount text, $_columnCreatedDate text)");
     await db.execute(
-        "Create table $_user($_columnID integer primary key, $_userWeight text, $_dailyAmount text, $_columnCreatedDate text)");
+        "Create table $_user($_columnID integer primary key, $_userWeight text, $_dailyAmount text, $_columnCreatedDate text, $_height text, $_age text)");
+    await db.execute(
+        "Create table $_notification($_columnID integer primary key, $_wakeUpTime text, $_sleepTime text,$_notificationLoop text, $_columnCreatedDate text)");
   }
 
   //Crud Methods Water
@@ -90,7 +100,8 @@ class DatabaseHelper {
 
   Future<List<User>> getUserInfo() async {
     Database db = await this.database;
-    var result = await db.rawQuery("select * from $_user");
+    var result =
+        await db.rawQuery("select * from $_user ORDER BY id DESC LIMIT 1");
     return List.generate(result.length, (i) {
       return User.fromMap(result[i]);
     });
@@ -105,6 +116,23 @@ class DatabaseHelper {
   Future<int> deleteUser() async {
     Database db = await this.database;
     var result = await db.rawDelete("delete from $_user)");
+    return result;
+  }
+
+  //Crup for Notifications
+
+  Future<List<NotificationInfo>> getNotificationData() async {
+    Database db = await this.database;
+    var result = await db
+        .rawQuery("select * from $_notification ORDER BY id DESC LIMIT 1");
+    return List.generate(result.length, (i) {
+      return NotificationInfo.fromMap(result[i]);
+    });
+  }
+
+  Future<int> insertNotification(NotificationInfo notificationInfo) async {
+    Database db = await this.database;
+    var result = await db.insert("$_notification", notificationInfo.toMap());
     return result;
   }
 }

@@ -4,9 +4,12 @@ class User {
   String userWeight;
   String createdDate;
   String dailyAmount;
+  String height;
+  String age;
 
   //Constructor
-  User(this.userWeight, this.createdDate, this.dailyAmount);
+  User(this.userWeight, this.createdDate, this.dailyAmount, this.height,
+      this.age);
   // Silme ve güncelleme gibi işlemler için ise id'li  constructor
   User.withId(this.id, this.userWeight, this.createdDate);
 
@@ -18,6 +21,8 @@ class User {
     map["userWeight"] = userWeight;
     map["dailyAmount"] = dailyAmount;
     map["createdDate"] = createdDate;
+    map["height"] = height;
+    map["age"] = age;
     return map;
   }
 
@@ -26,5 +31,7 @@ class User {
     this.userWeight = map["userWeight"];
     this.createdDate = map["createdDate"];
     this.dailyAmount = map["dailyAmount"];
+    this.height = map["height"];
+    this.age = map["age"];
   }
 }

@@ -1,7 +1,10 @@
 import 'package:connectivity_wrapper/connectivity_wrapper.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/intl.dart';
 import 'package:load/load.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:waterreminder/models/user.dart';
@@ -81,16 +84,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   TextEditingController weight = TextEditingController();
   TextEditingController age = TextEditingController();
+  TextEditingController height = TextEditingController();
   int initialPage;
   TimeOfDay d1;
   TimeOfDay d2;
 
+  bool _btnEnabled = false;
+
   void saveObject(var result) {
-    _addUserInfo(User(
-      weight.text,
-      DateTime.now().toIso8601String(),
-      result,
-    ));
+    _addUserInfo(User(weight.text, DateTime.now().toIso8601String(), result,
+        height.text, age.text));
   }
 
   void _addUserInfo(User user) async {
@@ -100,80 +103,131 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        padding: EdgeInsets.all(30),
-        child: Container(
-          height: MediaQuery.of(context).size.height / 1.5,
-          decoration: new BoxDecoration(
-            color: Colors.transparent,
-            borderRadius: new BorderRadius.only(
-              topLeft: const Radius.circular(10.0),
-              topRight: const Radius.circular(10.0),
-            ),
-          ),
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text('Personal Information'),
+        shadowColor: Colors.blue,
+        backgroundColor: Colors.blue,
+      ),
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: Center(
           child: Container(
+            decoration: new BoxDecoration(
+              color: Colors.transparent,
+            ),
             padding: EdgeInsets.all(20),
-            child: new Column(
-              children: <Widget>[
-                Text(
-                  "Personal Information",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
+            child: Center(
+              child: new Column(
+                children: <Widget>[
+                  SizedBox(
+                    height: 10,
                   ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                TextFormField(
-                  controller: weight,
-                  decoration: InputDecoration(
-                    labelText: 'Weight(kg)',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                TextFormField(
-                  controller: age,
-                  decoration: InputDecoration(
-                    labelText: 'Age',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: ElevatedButton(
-                    child: Text('Save'),
-                    onPressed: () async {
-                      String result =
-                          ((int.parse(weight.text) * 0.039) * 1000).toString();
-                      saveObject(result);
-
-                      SharedPreferences prefs =
-                          await SharedPreferences.getInstance();
-                      prefs.setInt('pageState', 1);
-
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => BottomNavbar()),
-                      );
+                  TextFormField(
+                    controller: weight,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      labelText: 'Weight(kg)',
+                      border: OutlineInputBorder(),
+                    ),
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(3),
+                    ],
+                    onChanged: (val) {
+                      setState(() {
+                        isEmpty();
+                      });
                     },
                   ),
-                )
-              ],
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                    controller: height,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      labelText: 'height(cm)',
+                      border: OutlineInputBorder(),
+                    ),
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(3),
+                    ],
+                    onChanged: (val) {
+                      setState(() {
+                        isEmpty();
+                      });
+                    },
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                    controller: age,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      labelText: 'Age',
+                      border: OutlineInputBorder(),
+                    ),
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(3),
+                    ],
+                    onChanged: (val) {
+                      setState(() {
+                        isEmpty();
+                      });
+                    },
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                      child: Text('Save'),
+                      onPressed: _btnEnabled == true ? saveData : null,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ),
     );
+  }
+
+  void isEmpty() {
+    print("object");
+    if (weight.text == "" || height.text == "" || age.text == "") {
+      _btnEnabled = false;
+    } else {
+      _btnEnabled = true;
+    }
+  }
+
+  void saveData() async {
+    if (weight.text == "" || height.text == "" || age.text == "") {
+      Flushbar(
+        title: "Error",
+        message: "Please fill all area",
+        duration: Duration(seconds: 3),
+      )..show(context);
+    } else {
+      String result = ((int.parse(weight.text) * 0.039) * 1000).toString();
+
+      saveObject(result);
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setInt('pageState', 1);
+      FocusScope.of(context).unfocus();
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => BottomNavbar()),
+      );
+    }
   }
 }
 

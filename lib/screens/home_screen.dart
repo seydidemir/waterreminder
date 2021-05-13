@@ -25,8 +25,9 @@ class _HomeScreenState extends State<HomeScreen> {
   double _todayScore = 0.0;
   double _userRequest = 0.0;
   double targetValue = 0;
-  Color borderColor = Colors.greenAccent;
+  Color borderColor = Colors.blue;
   bool backBtn = false;
+  Color iconColor = Colors.white;
 
   @override
   void initState() {
@@ -121,206 +122,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
-            // Container(
-            //   height: 155,
-            //   decoration: BoxDecoration(
-            //     borderRadius: BorderRadius.circular(12),
-            //   ),
-            //   child: ListView(
-            //     scrollDirection: Axis.horizontal,
-            //     children: <Widget>[
-            //       GestureDetector(
-            //         onTap: () {
-            //           setState(
-            //             () {
-            //               groupValue = 10.0;
-            //             },
-            //           );
-            //         },
-            //         child: Container(
-            //           decoration: BoxDecoration(
-            //             borderRadius: BorderRadius.circular(12),
-            //             color: Colors.redAccent.withOpacity(0.5),
-            //           ),
-            //           padding: EdgeInsets.all(10),
-            //           margin: EdgeInsets.all(10),
-            //           width: 120,
-            //           child: Column(
-            //             mainAxisAlignment: MainAxisAlignment.center,
-            //             crossAxisAlignment: CrossAxisAlignment.center,
-            //             children: <Widget>[
-            //               SvgPicture.asset(
-            //                 'assets/img/coffee-cup.svg',
-            //                 width: 45,
-            //                 color: Colors.white,
-            //               ),
-            //               SizedBox(
-            //                 height: 5,
-            //               ),
-            //               Text(
-            //                 "100 ml",
-            //                 style: TextStyle(
-            //                     fontSize: 13.0, fontWeight: FontWeight.w600),
-            //               ),
-            //               Container(
-            //                 height: 25,
-            //                 width: 20,
-            //                 child: Radio(
-            //                   activeColor: Colors.white,
-            //                   value: 10.0,
-            //                   groupValue: groupValue,
-            //                   onChanged: _handleRadioValueChange,
-            //                 ),
-            //               ),
-            //             ],
-            //           ),
-            //         ),
-            //       ),
-            //       GestureDetector(
-            //         onTap: () {
-            //           setState(
-            //             () {
-            //               groupValue = 20.0;
-            //             },
-            //           );
-            //         },
-            //         child: Container(
-            //           decoration: BoxDecoration(
-            //             borderRadius: BorderRadius.circular(12),
-            //             color: Colors.blueAccent.withOpacity(0.5),
-            //           ),
-            //           padding: EdgeInsets.all(10),
-            //           margin: EdgeInsets.all(10),
-            //           width: 120,
-            //           child: Column(
-            //             mainAxisAlignment: MainAxisAlignment.center,
-            //             crossAxisAlignment: CrossAxisAlignment.center,
-            //             children: <Widget>[
-            //               SvgPicture.asset(
-            //                 'assets/img/glass-of-water.svg',
-            //                 width: 45,
-            //                 color: Colors.white,
-            //               ),
-            //               SizedBox(
-            //                 height: 5,
-            //               ),
-            //               Text(
-            //                 "200 ml",
-            //                 style: TextStyle(
-            //                     fontSize: 13.0, fontWeight: FontWeight.w600),
-            //               ),
-            //               Container(
-            //                 height: 25,
-            //                 width: 20,
-            //                 child: Radio(
-            //                   activeColor: Colors.white,
-            //                   value: 20.0,
-            //                   groupValue: groupValue,
-            //                   onChanged: _handleRadioValueChange,
-            //                 ),
-            //               ),
-            //             ],
-            //           ),
-            //         ),
-            //       ),
-            //       GestureDetector(
-            //         onTap: () {
-            //           setState(
-            //             () {
-            //               groupValue = 33.0;
-            //             },
-            //           );
-            //         },
-            //         child: Container(
-            //           decoration: BoxDecoration(
-            //             borderRadius: BorderRadius.circular(12),
-            //             color: Colors.greenAccent.withOpacity(0.5),
-            //           ),
-            //           padding: EdgeInsets.all(10),
-            //           margin: EdgeInsets.all(10),
-            //           width: 120,
-            //           child: Column(
-            //             mainAxisAlignment: MainAxisAlignment.center,
-            //             crossAxisAlignment: CrossAxisAlignment.center,
-            //             children: <Widget>[
-            //               SvgPicture.asset(
-            //                 'assets/img/can.svg',
-            //                 width: 45,
-            //                 color: Colors.white,
-            //               ),
-            //               SizedBox(
-            //                 height: 5,
-            //               ),
-            //               Text(
-            //                 "330 ml",
-            //                 style: TextStyle(
-            //                     fontSize: 13.0, fontWeight: FontWeight.w600),
-            //               ),
-            //               Container(
-            //                 height: 25,
-            //                 width: 20,
-            //                 child: Radio(
-            //                   activeColor: Colors.white,
-            //                   value: 33.0,
-            //                   groupValue: groupValue,
-            //                   onChanged: _handleRadioValueChange,
-            //                 ),
-            //               ),
-            //             ],
-            //           ),
-            //         ),
-            //       ),
-            //       GestureDetector(
-            //         onTap: () {
-            //           setState(
-            //             () {
-            //               groupValue = 50.0;
-            //             },
-            //           );
-            //         },
-            //         child: Container(
-            //           decoration: BoxDecoration(
-            //             borderRadius: BorderRadius.circular(12),
-            //             color: Colors.orangeAccent.withOpacity(0.5),
-            //           ),
-            //           padding: EdgeInsets.all(10),
-            //           margin: EdgeInsets.all(10),
-            //           width: 120,
-            //           child: Column(
-            //             mainAxisAlignment: MainAxisAlignment.center,
-            //             crossAxisAlignment: CrossAxisAlignment.center,
-            //             children: <Widget>[
-            //               SvgPicture.asset(
-            //                 'assets/img/water-bottle.svg',
-            //                 width: 45,
-            //                 color: Colors.white,
-            //               ),
-            //               SizedBox(
-            //                 height: 5,
-            //               ),
-            //               Text(
-            //                 "500 ml",
-            //                 style: TextStyle(
-            //                     fontSize: 13.0, fontWeight: FontWeight.w600),
-            //               ),
-            //               Container(
-            //                 height: 25,
-            //                 width: 20,
-            //                 child: Radio(
-            //                   activeColor: Colors.white,
-            //                   value: 50.0,
-            //                   groupValue: groupValue,
-            //                   onChanged: _handleRadioValueChange,
-            //                 ),
-            //               ),
-            //             ],
-            //           ),
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            // ),
-
             Container(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -351,7 +152,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 SvgPicture.asset(
                                   'assets/img/coffee-cup.svg',
                                   width: 45,
-                                  color: Colors.white,
+                                  color: iconColor,
                                 ),
                                 SizedBox(
                                   height: 5,
@@ -399,7 +200,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 SvgPicture.asset(
                                   'assets/img/can.svg',
                                   width: 45,
-                                  color: Colors.white,
+                                  color: iconColor,
                                 ),
                                 SizedBox(
                                   height: 5,
@@ -453,7 +254,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 SvgPicture.asset(
                                   'assets/img/glass-of-water.svg',
                                   width: 45,
-                                  color: Colors.white,
+                                  color: iconColor,
                                 ),
                                 SizedBox(
                                   height: 5,
@@ -501,7 +302,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 SvgPicture.asset(
                                   'assets/img/water-bottle.svg',
                                   width: 45,
-                                  color: Colors.white,
+                                  color: iconColor,
                                 ),
                                 SizedBox(
                                   height: 5,
@@ -532,7 +333,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-
             SizedBox(
               height: 10,
             ),

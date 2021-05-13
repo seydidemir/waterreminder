@@ -1,7 +1,11 @@
 import 'package:fbutton/fbutton.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:settings_ui/settings_ui.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:waterreminder/models/notofication.dart';
 import 'package:waterreminder/models/user.dart';
 import 'package:waterreminder/utils/dbHelper.dart';
 
@@ -14,13 +18,19 @@ class _ProfilScreenState extends State<ProfilScreen> {
   DatabaseHelper _databaseHelper = DatabaseHelper();
   // ignore: deprecated_member_use
   List<User> allUserInfo = new List<User>();
+  // ignore: deprecated_member_use
+  List<NotificationInfo> notificationInfo = new List<NotificationInfo>();
 
   bool alertValue = false;
+
+  bool _btnEnabled = false;
+
   String dailyAmount = "";
-  TimeOfDay d1;
-  TimeOfDay d2;
+  TimeOfDay wakeUpTime;
+  TimeOfDay sleepTime;
   TextEditingController weight = TextEditingController();
   TextEditingController age = TextEditingController();
+  TextEditingController height = TextEditingController();
   TextEditingController wakeUp = TextEditingController();
   TextEditingController sleep = TextEditingController();
 
@@ -28,11 +38,8 @@ class _ProfilScreenState extends State<ProfilScreen> {
 
   void saveWaterAmount(var result) {
     _addUserInfo(
-      User(
-        weight.text,
-        DateTime.now().toIso8601String(),
-        result,
-      ),
+      User(weight.text, DateTime.now().toIso8601String(), result, height.text,
+          age.text),
     );
   }
 
@@ -45,17 +52,44 @@ class _ProfilScreenState extends State<ProfilScreen> {
   }
 
   void getUserInfo() {
-    var weightText;
     var userInfo = _databaseHelper.getUserInfo();
     userInfo.then((data) {
       this.allUserInfo = data;
+
       for (var daily in allUserInfo) {
         dailyAmount = daily.dailyAmount;
-        weightText = daily.userWeight;
+        weight.text = daily.userWeight;
+        height.text = daily.height;
+        age.text = daily.age;
       }
-      setState(() {
-        weight.text = weightText;
-      });
+      setState(() {});
+    });
+  }
+
+  void getNotificationData() {
+    var notificationInfos = _databaseHelper.getNotificationData();
+    notificationInfos.then((data) {
+      this.notificationInfo = data;
+
+      for (var daily in notificationInfo) {
+        print(daily);
+      }
+      setState(() {});
+    });
+  }
+
+  void saveTimeInfo() {
+    _addTimeInfo(
+      NotificationInfo(
+          wakeUp.text, DateTime.now().toIso8601String(), sleep.text, "20"),
+    );
+  }
+
+  void _addTimeInfo(NotificationInfo notificationInfo) async {
+    await _databaseHelper.insertNotification(notificationInfo);
+
+    setState(() {
+      getUserInfo();
     });
   }
 
@@ -63,6 +97,7 @@ class _ProfilScreenState extends State<ProfilScreen> {
   void initState() {
     super.initState();
     getUserInfo();
+    getNotificationData();
   }
 
   @override
@@ -95,9 +130,7 @@ class _ProfilScreenState extends State<ProfilScreen> {
             tiles: [
               SettingsTile(
                 title: 'Daily Amount',
-                subtitle: dailyAmount.isNotEmpty
-                    ? dailyAmount + "ml"
-                    : "click to calculate",
+                subtitle: dailyAmount.isNotEmpty ? dailyAmount + "ml" : "",
                 subtitleTextStyle: TextStyle(
                   color: Colors.red,
                   fontSize: 16,
@@ -145,9 +178,6 @@ class _ProfilScreenState extends State<ProfilScreen> {
                 ),
                 onPressed: (BuildContext context) {},
               ),
-              SettingsTile(
-                title: 'Selected time: ${_time.format(context)}',
-              ),
             ],
           ),
         ],
@@ -156,12 +186,36 @@ class _ProfilScreenState extends State<ProfilScreen> {
   }
 
   void dailyAmountCalculate() {
+    void isEmpty() {
+      print("object");
+      if (weight.text == "" || height.text == "" || age.text == "") {
+        _btnEnabled = false;
+      } else {
+        _btnEnabled = true;
+      }
+    }
+
+    void saveData() {
+      if (weight.text == "" || height.text == "" || age.text == "") {
+        Flushbar(
+          title: "Error",
+          message: "Please fill all area",
+          duration: Duration(seconds: 3),
+        )..show(context);
+      } else {
+        String result = ((int.parse(weight.text) * 0.039) * 1000).toString();
+
+        saveWaterAmount(result);
+
+        FocusScope.of(context).unfocus();
+      }
+    }
+
     showModalBottomSheet(
         context: context,
         builder: (BuildContext context) {
           return StatefulBuilder(builder: (context, state) {
             return Container(
-              height: MediaQuery.of(context).size.height / 1.5,
               decoration: new BoxDecoration(
                 color: Colors.transparent,
                 borderRadius: new BorderRadius.only(
@@ -176,7 +230,7 @@ class _ProfilScreenState extends State<ProfilScreen> {
                     Text(
                       "Personal Information",
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 21,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -185,20 +239,57 @@ class _ProfilScreenState extends State<ProfilScreen> {
                     ),
                     TextFormField(
                       controller: weight,
+                      keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                         labelText: 'Weight(kg)',
                         border: OutlineInputBorder(),
                       ),
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(3),
+                      ],
+                      onChanged: (val) {
+                        setState(() {
+                          isEmpty();
+                        });
+                      },
                     ),
                     SizedBox(
-                      height: 20,
+                      height: 10,
+                    ),
+                    TextFormField(
+                      controller: height,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: 'height(cm)',
+                        border: OutlineInputBorder(),
+                      ),
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(3),
+                      ],
+                      onChanged: (val) {
+                        setState(() {
+                          isEmpty();
+                        });
+                      },
+                    ),
+                    SizedBox(
+                      height: 10,
                     ),
                     TextFormField(
                       controller: age,
+                      keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                         labelText: 'Age',
                         border: OutlineInputBorder(),
                       ),
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(3),
+                      ],
+                      onChanged: (val) {
+                        setState(() {
+                          isEmpty();
+                        });
+                      },
                     ),
                     SizedBox(
                       height: 20,
@@ -208,16 +299,9 @@ class _ProfilScreenState extends State<ProfilScreen> {
                       height: 50,
                       child: ElevatedButton(
                         child: Text('Save'),
-                        onPressed: () {
-                          String result =
-                              ((int.parse(weight.text) * 0.039) * 1000)
-                                  .toString();
-                          saveWaterAmount(result);
-
-                          Navigator.pop(context, result);
-                        },
+                        onPressed: _btnEnabled == true ? saveData : null,
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -316,12 +400,9 @@ class _ProfilScreenState extends State<ProfilScreen> {
                       child: ElevatedButton(
                         child: Text('Save'),
                         onPressed: () {
-                          String result =
-                              ((int.parse(weight.text) * 0.039) * 1000)
-                                  .toString();
-                          // saveObject(result);
+                          saveTimeInfo();
 
-                          Navigator.pop(context, result);
+                          Navigator.pop(context);
                         },
                       ),
                     )
