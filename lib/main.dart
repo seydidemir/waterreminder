@@ -4,10 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:intl/intl.dart';
 import 'package:load/load.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:waterreminder/models/user.dart';
+import 'package:waterreminder/service/admob_service.dart';
 import 'package:waterreminder/utils/bottom_navbar.dart';
 import 'dart:io';
 
@@ -18,6 +18,8 @@ int initScreen = 0;
 int dailyAmount;
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  AdMobService.initialize();
   runApp(MyApp());
 
   // initStartApp();

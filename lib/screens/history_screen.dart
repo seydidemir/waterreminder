@@ -8,6 +8,7 @@ import 'package:waterreminder/models/user.dart';
 import 'package:waterreminder/models/water.dart';
 import 'package:waterreminder/utils/dbHelper.dart';
 import 'package:wave_progress_widget/wave_progress_widget.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class HistoryScreen extends StatefulWidget {
   @override
@@ -20,8 +21,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
   List<WatersAmount> allWaterHistory = new List<WatersAmount>();
   // ignore: deprecated_member_use
   List<User> allUserInfo = new List<User>();
+  Color cardBgColor = Colors.white;
 
   String dailyAmount = "";
+  bool deleteVisibility = false;
 
   double groupValue = 20.0;
   double _progress = 0.0;
@@ -30,6 +33,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
   String _todayPercentage = "";
   double targetValue = 0;
   Color borderColor = Colors.blueAccent;
+
+  final SlidableController slidableController = new SlidableController();
 
   @override
   void initState() {
@@ -42,6 +47,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
     var userInfo = _databaseHelper.getUserInfo();
     userInfo.then((data) {
       this.allUserInfo = data;
+
       for (var daily in allUserInfo) {
         dailyAmount = daily.dailyAmount;
         _userRequest = double.parse(dailyAmount);
@@ -54,6 +60,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
     var waterAmountFuture = _databaseHelper.getTodayDayData();
     waterAmountFuture.then((data) {
       this.allWaterHistory = data;
+      if (this.allWaterHistory.isNotEmpty) {
+        deleteVisibility = true;
+      }
       for (var maxAmount in allWaterHistory) {
         flag += maxAmount.amount;
       }
@@ -91,19 +100,20 @@ class _HistoryScreenState extends State<HistoryScreen> {
         centerTitle: true,
         title: const Text('History'),
         actions: <Widget>[
-          Padding(
-              padding: EdgeInsets.only(right: 20.0),
-              child: GestureDetector(
-                onTap: () {
-                  _databaseHelper.deleteAllRecords();
-
-                  getWaweWatersAmount();
-                },
-                child: Icon(
-                  Icons.delete_forever,
-                  size: 26.0,
-                ),
-              )),
+          Visibility(
+            visible: deleteVisibility,
+            child: Padding(
+                padding: EdgeInsets.only(right: 20.0),
+                child: GestureDetector(
+                  onTap: () {
+                    _deleteToday(context);
+                  },
+                  child: Icon(
+                    Icons.delete_forever,
+                    size: 26.0,
+                  ),
+                )),
+          ),
         ],
       ),
       body: Container(
@@ -256,13 +266,15 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     : ListView.builder(
                         itemCount: allWaterHistory.length,
                         itemBuilder: (context, index) {
-                          return Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                            child: Slidable(
-                              actionPane: SlidableDrawerActionPane(),
-                              actionExtentRatio: 0.25,
+                          return Slidable(
+                            actionPane: SlidableDrawerActionPane(),
+                            controller: slidableController,
+                            actionExtentRatio: 0.25,
+                            closeOnScroll: true,
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
                               child: Container(
                                 child: ListTile(
                                   leading: SvgPicture.asset(
@@ -297,18 +309,24 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                   ),
                                 ),
                               ),
-                              secondaryActions: <Widget>[
-                                IconSlideAction(
+                            ),
+                            secondaryActions: <Widget>[
+                              Builder(
+                                builder: (context) {
+                                  return IconSlideAction(
                                     caption: 'Delete',
                                     color: Colors.red,
                                     icon: Icons.delete,
-                                    onTap: () => {
-                                          print(allWaterHistory[index].id),
-                                          _showSnackBar(context, 'Deleted',
-                                              allWaterHistory[index].id),
-                                        }),
-                              ],
-                            ),
+                                    onTap: () {
+                                      Slidable.of(context).close();
+                                      print(allWaterHistory[index].id);
+                                      _showSnackBar(context, 'Deleted',
+                                          allWaterHistory[index].id);
+                                    },
+                                  );
+                                },
+                              ),
+                            ],
                           );
                         },
                       ),
@@ -320,6 +338,18 @@ class _HistoryScreenState extends State<HistoryScreen> {
     );
   }
 
+  // setColor(String name) {
+  //   if (name == "10.0") {
+  //     return Colors.redAccent.withOpacity(0.5);
+  //   } else if (name == "20.0") {
+  //     return Colors.blueAccent.withOpacity(0.5);
+  //   } else if (name == "33.0") {
+  //     return Colors.greenAccent.withOpacity(0.5);
+  //   } else {
+  //     return Colors.orangeAccent.withOpacity(0.5);
+  //   }
+  // }
+
   void _showSnackBar(BuildContext context, String text, int id) {
     _databaseHelper.deleteById(id);
     getWaweWatersAmount();
@@ -327,5 +357,38 @@ class _HistoryScreenState extends State<HistoryScreen> {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(SnackBar(content: Text(text)));
+  }
+
+  _deleteToday(context) {
+    Alert(
+      context: context,
+      type: AlertType.warning,
+      title: "Delete",
+      desc: "Do you really want to delete today's data?",
+      buttons: [
+        DialogButton(
+          child: Text(
+            "OK",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () => {
+            _databaseHelper.deleteAllRecords(),
+            getWaweWatersAmount(),
+            Navigator.of(context, rootNavigator: true).pop(),
+          },
+          width: 120,
+          color: Color(0xFF6A4EA1),
+        ),
+        DialogButton(
+          child: Text(
+            "Cancel",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+          width: 120,
+          color: Color(0xffc15050),
+        )
+      ],
+    ).show();
   }
 }

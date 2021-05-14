@@ -2,8 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:waterreminder/models/user.dart';
 import 'package:waterreminder/models/water.dart';
+import 'package:waterreminder/service/admob_service.dart';
 import 'package:waterreminder/utils/dbHelper.dart';
 import 'package:wave_progress_widget/wave_progress.dart';
 
@@ -88,7 +90,17 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(centerTitle: true, title: const Text('Water Reminder')),
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text('Water Reminder'),
+      ),
+      bottomNavigationBar: Container(
+        height: 50,
+        child: AdWidget(
+          ad: AdMobService.createBanerAd()..load(),
+          key: UniqueKey(),
+        ),
+      ),
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
