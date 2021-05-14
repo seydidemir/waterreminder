@@ -56,9 +56,7 @@ class WaterReminder extends StatelessWidget {
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Water Reminder',
-          theme: ThemeData(
-            fontFamily: 'Roboto',
-          ),
+          theme: ThemeData(primaryColor: Colors.blue[800]),
           home: AdvancedSplashScreen(
             child: BottomNavbar(),
             seconds: 2,
@@ -106,8 +104,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: const Text('Personal Information'),
-        shadowColor: Colors.blue,
-        backgroundColor: Colors.blue,
       ),
       body: GestureDetector(
         onTap: () {

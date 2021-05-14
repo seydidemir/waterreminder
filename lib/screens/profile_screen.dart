@@ -1,5 +1,6 @@
 import 'package:fbutton/fbutton.dart';
 import 'package:flushbar/flushbar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -7,6 +8,7 @@ import 'package:settings_ui/settings_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:waterreminder/models/notofication.dart';
 import 'package:waterreminder/models/user.dart';
+import 'package:waterreminder/screens/set_alert_screen.dart';
 import 'package:waterreminder/utils/dbHelper.dart';
 
 class ProfilScreen extends StatefulWidget {
@@ -23,7 +25,8 @@ class _ProfilScreenState extends State<ProfilScreen> {
 
   bool alertValue = false;
 
-  bool _btnEnabled = false;
+  bool _btnDailyEnabled = false;
+  bool _btnTimeEnabled = false;
 
   String dailyAmount = "";
   TimeOfDay wakeUpTime;
@@ -31,10 +34,6 @@ class _ProfilScreenState extends State<ProfilScreen> {
   TextEditingController weight = TextEditingController();
   TextEditingController age = TextEditingController();
   TextEditingController height = TextEditingController();
-  TextEditingController wakeUp = TextEditingController();
-  TextEditingController sleep = TextEditingController();
-
-  TimeOfDay _time = TimeOfDay(hour: 7, minute: 15);
 
   void saveWaterAmount(var result) {
     _addUserInfo(
@@ -66,38 +65,10 @@ class _ProfilScreenState extends State<ProfilScreen> {
     });
   }
 
-  void getNotificationData() {
-    var notificationInfos = _databaseHelper.getNotificationData();
-    notificationInfos.then((data) {
-      this.notificationInfo = data;
-
-      for (var daily in notificationInfo) {
-        print(daily);
-      }
-      setState(() {});
-    });
-  }
-
-  void saveTimeInfo() {
-    _addTimeInfo(
-      NotificationInfo(
-          wakeUp.text, DateTime.now().toIso8601String(), sleep.text, "20"),
-    );
-  }
-
-  void _addTimeInfo(NotificationInfo notificationInfo) async {
-    await _databaseHelper.insertNotification(notificationInfo);
-
-    setState(() {
-      getUserInfo();
-    });
-  }
-
   @override
   void initState() {
     super.initState();
     getUserInfo();
-    getNotificationData();
   }
 
   @override
@@ -106,8 +77,6 @@ class _ProfilScreenState extends State<ProfilScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: const Text('Settings'),
-        shadowColor: Colors.blue,
-        backgroundColor: Colors.blue,
       ),
       bottomNavigationBar: BottomAppBar(
         color: Colors.white,
@@ -121,67 +90,101 @@ class _ProfilScreenState extends State<ProfilScreen> {
         elevation: 0,
       ),
       body: Container(
-          child: SettingsList(
-        contentPadding: EdgeInsets.all(10),
-        backgroundColor: Colors.white,
-        sections: [
-          SettingsSection(
-            title: 'Settings',
-            tiles: [
-              SettingsTile(
-                title: 'Daily Amount',
-                subtitle: dailyAmount.isNotEmpty ? dailyAmount + "ml" : "",
-                subtitleTextStyle: TextStyle(
-                  color: Colors.red,
-                  fontSize: 16,
+        child: SettingsList(
+          contentPadding: EdgeInsets.all(10),
+          backgroundColor: Colors.white,
+          sections: [
+            SettingsSection(
+              tiles: [
+                SettingsTile(
+                  title: 'Daily Amount',
+                  subtitle: dailyAmount.isNotEmpty ? dailyAmount + "ml" : "",
+                  subtitleTextStyle: TextStyle(
+                    color: Colors.red,
+                    fontSize: 16,
+                  ),
+                  leading: Icon(
+                    FontAwesome.balance_scale,
+                    color: Colors.amber,
+                  ),
+                  trailing: Icon(
+                    FontAwesome.chevron_right,
+                    color: Colors.grey,
+                    size: 20,
+                  ),
+                  onPressed: (BuildContext context) {
+                    getUserInfo();
+                    dailyAmountCalculate();
+                  },
                 ),
-                leading: Icon(
-                  FontAwesome.balance_scale,
-                  color: Colors.amber,
+                SettingsTile.switchTile(
+                  title: 'Alert',
+                  leading: Icon(
+                    Icons.notification_add,
+                  ),
+                  switchValue: alertValue,
+                  onToggle: (bool value) {
+                    alertValue = !value;
+                  },
                 ),
-                onPressed: (BuildContext context) {
-                  getUserInfo();
-                  dailyAmountCalculate();
-                },
-              ),
-              SettingsTile(
-                title: 'Alert',
-                leading: Icon(
-                  FontAwesome.bell,
-                  color: Colors.blueGrey,
+                SettingsTile(
+                  title: 'Wake-up / Sleep time',
+                  leading: Icon(
+                    FontAwesome.bed,
+                    color: Colors.red,
+                  ),
+                  onPressed: (BuildContext context) {
+                    Navigator.of(context).push(_createRoute());
+                  },
                 ),
-                onPressed: (BuildContext context) {
-                  wakeAndSleeptime();
-                },
-              ),
-              SettingsTile(
-                title: 'RATE APP',
-                leading: Icon(
-                  FontAwesome.star,
-                  color: Colors.yellow[700],
+                SettingsTile(
+                  title: 'RATE APP',
+                  leading: Icon(
+                    FontAwesome.star,
+                    color: Colors.yellow[700],
+                  ),
+                  onPressed: (BuildContext context) {},
                 ),
-                onPressed: (BuildContext context) {},
-              ),
-              SettingsTile(
-                title: 'CONTACT US',
-                leading: Icon(
-                  FontAwesome.envelope,
-                  color: Colors.green,
+                SettingsTile(
+                  title: 'CONTACT US',
+                  leading: Icon(
+                    FontAwesome.envelope,
+                    color: Colors.green,
+                  ),
+                  onPressed: (BuildContext context) {},
                 ),
-                onPressed: (BuildContext context) {},
-              ),
-              SettingsTile(
-                title: 'SHARE APP',
-                leading: Icon(
-                  FontAwesome.share_square,
-                  color: Colors.blueAccent,
+                SettingsTile(
+                  title: 'SHARE APP',
+                  leading: Icon(
+                    FontAwesome.share_square,
+                    color: Colors.blueAccent,
+                  ),
+                  onPressed: (BuildContext context) {},
                 ),
-                onPressed: (BuildContext context) {},
-              ),
-            ],
-          ),
-        ],
-      )),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Route _createRoute() {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => SetAlertScreen(),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        var begin = Offset(0.0, 1.0);
+        var end = Offset.zero;
+        var curve = Curves.ease;
+
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
     );
   }
 
@@ -189,9 +192,9 @@ class _ProfilScreenState extends State<ProfilScreen> {
     void isEmpty() {
       print("object");
       if (weight.text == "" || height.text == "" || age.text == "") {
-        _btnEnabled = false;
+        _btnDailyEnabled = false;
       } else {
-        _btnEnabled = true;
+        _btnDailyEnabled = true;
       }
     }
 
@@ -299,113 +302,12 @@ class _ProfilScreenState extends State<ProfilScreen> {
                       height: 50,
                       child: ElevatedButton(
                         child: Text('Save'),
-                        onPressed: _btnEnabled == true ? saveData : null,
+                        onPressed: _btnDailyEnabled == true ? saveData : null,
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.blue[800],
+                        ),
                       ),
                     ),
-                  ],
-                ),
-              ),
-            );
-          });
-        });
-  }
-
-  Future<Null> _selectWakeUpTime(StateSetter updateState) async {
-    final TimeOfDay newTime = await showTimePicker(
-      context: context,
-      initialTime: _time,
-    );
-    if (newTime != null) {
-      updateState(() {
-        _time = newTime;
-        wakeUp.text = _time.format(context);
-      });
-    }
-  }
-
-  Future<Null> _selectSleepTime(StateSetter updateState) async {
-    final TimeOfDay newTime = await showTimePicker(
-      context: context,
-      initialTime: _time,
-    );
-    if (newTime != null) {
-      updateState(() {
-        _time = newTime;
-        sleep.text = _time.format(context);
-      });
-    }
-  }
-
-  void wakeAndSleeptime() {
-    showModalBottomSheet(
-        context: context,
-        builder: (BuildContext context) {
-          return StatefulBuilder(builder: (context, state) {
-            return Container(
-              height: MediaQuery.of(context).size.height / 1.5,
-              decoration: new BoxDecoration(
-                color: Colors.transparent,
-                borderRadius: new BorderRadius.only(
-                  topLeft: const Radius.circular(10.0),
-                  topRight: const Radius.circular(10.0),
-                ),
-              ),
-              child: Container(
-                padding: EdgeInsets.all(20),
-                child: new Column(
-                  children: <Widget>[
-                    Text(
-                      "Alert Information",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    TextFormField(
-                      controller: wakeUp,
-                      decoration: InputDecoration(
-                        labelText: 'Wake up Time',
-                        border: OutlineInputBorder(),
-                      ),
-                      showCursor: false,
-                      readOnly: true,
-                      onTap: () {
-                        _selectWakeUpTime(state);
-                      },
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    TextFormField(
-                      showCursor: false,
-                      readOnly: true,
-                      onTap: () {
-                        _selectSleepTime(state);
-                      },
-                      controller: sleep,
-                      decoration: InputDecoration(
-                        labelText: 'Sleep time',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    SizedBox(
-                      width: double.infinity,
-                      height: 50,
-                      child: ElevatedButton(
-                        child: Text('Save'),
-                        onPressed: () {
-                          saveTimeInfo();
-
-                          Navigator.pop(context);
-                        },
-                      ),
-                    )
                   ],
                 ),
               ),

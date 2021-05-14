@@ -88,8 +88,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: const Text('History'),
-        shadowColor: Colors.blue,
-        backgroundColor: Colors.blue,
         actions: <Widget>[
           Padding(
               padding: EdgeInsets.only(right: 20.0),
@@ -175,7 +173,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   ),
                   Divider(
                     height: 1,
-                    color: Colors.blue,
+                    color: Colors.blue[800],
                   ),
                 ],
               ),
@@ -193,7 +191,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.blue,
+                      color: Colors.blue[800],
                     ),
                   ),
                 ],

@@ -88,12 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text('Water Reminder'),
-        shadowColor: Colors.blue,
-        backgroundColor: Colors.blue,
-      ),
+      appBar: AppBar(centerTitle: true, title: const Text('Water Reminder')),
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
@@ -358,7 +353,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     RawMaterialButton(
                       elevation: 2.0,
-                      fillColor: Colors.blue,
+                      fillColor: Theme.of(context).primaryColor,
                       child: Icon(
                         Icons.add,
                         size: 45.0,

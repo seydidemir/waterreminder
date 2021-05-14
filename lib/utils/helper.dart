@@ -20,23 +20,23 @@ class Helper {
   }
 }
 
-class GBColors {
-  static const MaterialColor primary = MaterialColor(
-    0xFF00A0A0,
-    <int, Color>{
-      50: Color(0xFF00A0A0),
-      100: Color(0xFF00A0A0),
-      200: Color(0xFF00A0A0),
-      300: Color(0xFF00A0A0),
-      400: Color(0xFF00A0A0),
-      500: Color(0xFF00A0A0),
-      600: Color(0xFF00A0A0),
-      700: Color(0xFF00A0A0),
-      800: Color(0xFF00A0A0),
-      900: Color(0xFF00A0A0),
-    },
-  );
-}
+// class GBColors {
+//   static const MaterialColor primary = MaterialColor(
+//     0xFF00A0A0,
+//     <int, Color>{
+//       50: Color(0xFF00A0A0),
+//       100: Color(0xFF00A0A0),
+//       200: Color(0xFF00A0A0),
+//       300: Color(0xFF00A0A0),
+//       400: Color(0xFF00A0A0),
+//       500: Color(0xFF00A0A0),
+//       600: Color(0xFF00A0A0),
+//       700: Color(0xFF00A0A0),
+//       800: Color(0xFF00A0A0),
+//       900: Color(0xFF00A0A0),
+//     },
+//   );
+// }
 
 class Debouncer {
   final int milliseconds;
