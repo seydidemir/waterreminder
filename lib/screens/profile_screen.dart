@@ -6,8 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:load/load.dart';
 import 'package:settings_ui/settings_ui.dart';
-import 'package:share/share.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:waterreminder/models/notofication.dart';
 import 'package:waterreminder/models/user.dart';

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:load/load.dart';
+import 'package:path/path.dart';
 import 'package:waterreminder/models/user.dart';
 import 'package:waterreminder/models/water.dart';
 import 'package:waterreminder/utils/dbHelper.dart';
@@ -209,6 +211,48 @@ class _HistoryScreenState extends State<HistoryScreen> {
                           style: TextStyle(color: Colors.grey, fontSize: 16),
                         ),
                       )
+                    // : ListView.builder(
+                    //     itemCount: allWaterHistory.length,
+                    //     itemBuilder: (context, index) {
+                    //       return Card(
+                    //         shape: RoundedRectangleBorder(
+                    //           borderRadius: BorderRadius.circular(15.0),
+                    //         ),
+                    //         child: ListTile(
+                    //           leading: SvgPicture.asset(
+                    //             'assets/img/250ml.svg',
+                    //             width: 45,
+                    //           ),
+                    //           title: Row(
+                    //             mainAxisAlignment:
+                    //                 MainAxisAlignment.spaceBetween,
+                    //             children: [
+                    //               Text(
+                    //                 (allWaterHistory[index].amount.round() *
+                    //                             10)
+                    //                         .toString() +
+                    //                     "ml ",
+                    //                 textAlign: TextAlign.left,
+                    //                 style: TextStyle(
+                    //                   fontSize: 18,
+                    //                   fontWeight: FontWeight.bold,
+                    //                 ),
+                    //               ),
+                    //               Text(
+                    //                 Jiffy(allWaterHistory[index].createdDate)
+                    //                     .format('HH:mm'),
+                    //                 textAlign: TextAlign.right,
+                    //                 style: TextStyle(
+                    //                     fontSize: 18,
+                    //                     fontWeight: FontWeight.normal),
+                    //               ),
+                    //             ],
+                    //           ),
+                    //         ),
+                    //       );
+                    //     },
+                    //   ),
+
                     : ListView.builder(
                         itemCount: allWaterHistory.length,
                         itemBuilder: (context, index) {
@@ -216,35 +260,54 @@ class _HistoryScreenState extends State<HistoryScreen> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15.0),
                             ),
-                            child: ListTile(
-                              leading: SvgPicture.asset(
-                                'assets/img/250ml.svg',
-                                width: 45,
-                              ),
-                              title: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    (allWaterHistory[index].amount.round() * 10)
-                                            .toString() +
-                                        "ml ",
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                            child: Slidable(
+                              actionPane: SlidableDrawerActionPane(),
+                              actionExtentRatio: 0.25,
+                              child: Container(
+                                child: ListTile(
+                                  leading: SvgPicture.asset(
+                                    'assets/img/250ml.svg',
+                                    width: 45,
                                   ),
-                                  Text(
-                                    Jiffy(allWaterHistory[index].createdDate)
-                                        .format('HH:mm'),
-                                    textAlign: TextAlign.right,
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.normal),
+                                  title: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        (allWaterHistory[index].amount.round() *
+                                                    10)
+                                                .toString() +
+                                            "ml ",
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                        Jiffy(allWaterHistory[index]
+                                                .createdDate)
+                                            .format('HH:mm'),
+                                        textAlign: TextAlign.right,
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.normal),
+                                      ),
+                                    ],
                                   ),
-                                ],
+                                ),
                               ),
+                              secondaryActions: <Widget>[
+                                IconSlideAction(
+                                    caption: 'Delete',
+                                    color: Colors.red,
+                                    icon: Icons.delete,
+                                    onTap: () => {
+                                          print(allWaterHistory[index].id),
+                                          _showSnackBar(context, 'Deleted',
+                                              allWaterHistory[index].id),
+                                        }),
+                              ],
                             ),
                           );
                         },
@@ -255,5 +318,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
         ),
       ),
     );
+  }
+
+  void _showSnackBar(BuildContext context, String text, int id) {
+    _databaseHelper.deleteById(id);
+    getWaweWatersAmount();
+
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(text)));
   }
 }

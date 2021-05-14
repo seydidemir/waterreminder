@@ -55,7 +55,7 @@ class DatabaseHelper {
   //Crud Methods Water
   Future<List<WatersAmount>> getAllData() async {
     Database db = await this.database;
-    var result = await db.query("$_waterAmount");
+    var result = await db.query("$_waterAmount ORDER BY id DESC ");
     return List.generate(result.length, (i) {
       return WatersAmount.fromMap(result[i]);
     });
@@ -64,7 +64,7 @@ class DatabaseHelper {
   Future<List<WatersAmount>> getTodayDayData() async {
     Database db = await this.database;
     var result = await db.rawQuery(
-        "select * from $_waterAmount where `$_columnCreatedDate` < '$todayDate' and `$_columnCreatedDate` >= '$nowDate' ");
+        "select * from $_waterAmount where `$_columnCreatedDate` < '$todayDate' and `$_columnCreatedDate` >= '$nowDate' ORDER BY id DESC ");
     return List.generate(result.length, (i) {
       return WatersAmount.fromMap(result[i]);
     });
@@ -80,6 +80,12 @@ class DatabaseHelper {
     Database db = await this.database;
     var result = await db.rawDelete(
         "delete from $_waterAmount where id=(Select MAX(id) from $_waterAmount)");
+    return result;
+  }
+
+  Future<int> deleteById(int id) async {
+    Database db = await this.database;
+    var result = await db.rawDelete("delete from $_waterAmount where id=$id");
     return result;
   }
 
