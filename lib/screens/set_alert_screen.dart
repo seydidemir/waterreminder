@@ -1,6 +1,7 @@
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:load/load.dart';
 import 'package:waterreminder/models/notofication.dart';
 import 'package:waterreminder/utils/dbHelper.dart';
 
@@ -106,6 +107,7 @@ class _SetAlertScreenState extends State<SetAlertScreen> {
   void initState() {
     super.initState();
     getNotificationData();
+    hideLoadingDialog();
   }
 
   @override

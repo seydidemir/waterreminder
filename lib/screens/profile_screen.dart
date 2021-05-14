@@ -4,8 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:load/load.dart';
 import 'package:settings_ui/settings_ui.dart';
+import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:waterreminder/models/notofication.dart';
 import 'package:waterreminder/models/user.dart';
 import 'package:waterreminder/screens/set_alert_screen.dart';
@@ -64,6 +67,16 @@ class _ProfilScreenState extends State<ProfilScreen> {
       setState(() {});
     });
   }
+
+  final Uri _emailLaunchUri = Uri(
+      scheme: 'mailto',
+      path: 'info@seydidemir.com',
+      queryParameters: {'subject': ''});
+
+  String _websiteLaunchUri = 'https://www.seydidemir.com';
+  void _launchURL() async => await canLaunch(_websiteLaunchUri)
+      ? await launch(_websiteLaunchUri)
+      : throw 'Could not launch $_websiteLaunchUri';
 
   @override
   void initState() {
@@ -134,6 +147,7 @@ class _ProfilScreenState extends State<ProfilScreen> {
                     color: Colors.red,
                   ),
                   onPressed: (BuildContext context) {
+                    showLoadingDialog();
                     Navigator.of(context).push(_createRoute());
                   },
                 ),
@@ -151,7 +165,9 @@ class _ProfilScreenState extends State<ProfilScreen> {
                     FontAwesome.envelope,
                     color: Colors.green,
                   ),
-                  onPressed: (BuildContext context) {},
+                  onPressed: (BuildContext context) {
+                    launch(_emailLaunchUri.toString());
+                  },
                 ),
                 SettingsTile(
                   title: 'SHARE APP',
@@ -160,6 +176,16 @@ class _ProfilScreenState extends State<ProfilScreen> {
                     color: Colors.blueAccent,
                   ),
                   onPressed: (BuildContext context) {},
+                ),
+                SettingsTile(
+                  title: 'Website',
+                  leading: Icon(
+                    FontAwesome.globe,
+                    color: Colors.green,
+                  ),
+                  onPressed: (BuildContext context) {
+                    _launchURL();
+                  },
                 ),
               ],
             ),
