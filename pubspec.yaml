@@ -28,7 +28,7 @@ dependencies:
   path: any
   pull_to_refresh: ^2.0.0
   flutter_icons: ^1.1.0
-  permission_handler: ^5.0.1
+  permission_handler: ^7.1.0
   settings_ui: ^1.0.0
   fbutton: ^2.0.1
   wave_progress_widget: ^0.0.1
@@ -38,6 +38,8 @@ dependencies:
   flutter_slidable: ^0.6.0
   rflutter_alert: ^1.0.2
   google_mobile_ads: ^0.12.2
+  flutter_local_notifications: ^5.0.0+4
+  rxdart: ^0.27.0
 
 
   

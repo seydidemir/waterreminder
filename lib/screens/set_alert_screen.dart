@@ -97,7 +97,7 @@ class _SetAlertScreenState extends State<SetAlertScreen> {
       for (var daily in notificationInfo) {
         wakeUp.text = daily.wakeUpTime;
         sleep.text = daily.sleepTime;
-        notificationLoop.text = daily.sleepTime;
+        notificationLoop.text = daily.notificationLoop;
       }
       setState(() {});
     });

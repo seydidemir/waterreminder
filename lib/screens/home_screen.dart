@@ -6,6 +6,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:waterreminder/models/user.dart';
 import 'package:waterreminder/models/water.dart';
 import 'package:waterreminder/service/admob_service.dart';
+import 'package:waterreminder/service/local_notify_service.dart';
 import 'package:waterreminder/utils/dbHelper.dart';
 import 'package:wave_progress_widget/wave_progress.dart';
 
@@ -36,6 +37,17 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     getUserInfo();
     getDailyWatersAmount();
+
+    localNotifyManager.setOnNotificationReceive(onNotificationReceive);
+    localNotifyManager.setOnNotificationClick(onNotificationClick);
+  }
+
+  onNotificationReceive(ReceiveNotification notification) {
+    print("notification received: ${notification.id}");
+  }
+
+  onNotificationClick(String payload) {
+    print("payload $payload");
   }
 
   void getUserInfo() {
@@ -96,6 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       bottomNavigationBar: Container(
         height: 50,
+        color: Color(0xffF1F1F1),
         child: AdWidget(
           ad: AdMobService.createBanerAd()..load(),
           key: UniqueKey(),
@@ -361,7 +374,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       padding: EdgeInsets.all(7.0),
                       shape: CircleBorder(),
-                      onPressed: () {},
+                      onPressed: () async {
+                        //localNotifyManager.cancelAllNotification();
+                        await localNotifyManager.showDailyNotification();
+                      },
                     ),
                     RawMaterialButton(
                       elevation: 2.0,
@@ -391,6 +407,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               },
                           },
                         );
+                        //AdMobService.showInterstitialAd();
                       },
                     ),
                     Visibility(

@@ -31,7 +31,7 @@ class AdvancedSplashScreen extends StatefulWidget {
       this.colorList = const [],
       this.backgroundImage,
       this.bgImageOpacity = 0.1,
-      this.appIcon = "img/GaziantepBilisimLogo",
+      this.appIcon = "",
       this.appTitle = "",
       this.appTitleStyle = const TextStyle(
           fontSize: 43.0,
@@ -133,8 +133,8 @@ class _AdvancedSplashScreenState extends State<AdvancedSplashScreen>
                 return Center(
                   child: Image.asset(
                     widget.appIcon,
-                    width: size.width / 1.9,
-                    height: size.height / 1.9,
+                    width: size.width / 1.3,
+                    height: size.height / 1.3,
                   ),
                 );
               },

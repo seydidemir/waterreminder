@@ -62,10 +62,10 @@ class WaterReminder extends StatelessWidget {
           home: AdvancedSplashScreen(
             child: BottomNavbar(),
             seconds: 2,
-            colorList: [Colors.white],
-            appIcon: "assets/img/splash_img.png",
-            appTitle: "Powered by SAYTHEIRON",
-            appTitleStyle: TextStyle(fontSize: 13, color: Colors.black),
+            colorList: [Colors.blue[800]],
+            appIcon: "assets/img/MLogo.png",
+            appTitle: "Powered by SeydiDemir",
+            appTitleStyle: TextStyle(fontSize: 13, color: Colors.white),
             animate: true,
           ),
         ),
@@ -238,20 +238,20 @@ class MyHttpOverrides extends HttpOverrides {
   }
 }
 
-// class MyColors {
-//   static const MaterialColor turkuaz = MaterialColor(
-//     0xFFffffff,
-//     <int, Color>{
-//       50: Colors.white,
-//       100: Colors.white,
-//       200: Colors.white,
-//       300: Colors.white,
-//       400: Colors.white,
-//       500: Colors.white,
-//       600: Colors.white,
-//       700: Colors.white,
-//       800: Colors.white,
-//       900: Colors.white,
-//     },
-//   );
-// }
+class MyColors {
+  static const MaterialColor turkuaz = MaterialColor(
+    0xFFf8f8f8,
+    <int, Color>{
+      50: Colors.white,
+      100: Colors.black,
+      200: Colors.white,
+      300: Colors.red,
+      400: Colors.white,
+      500: Colors.white,
+      600: Colors.white,
+      700: Colors.white,
+      800: Colors.white,
+      900: Colors.white,
+    },
+  );
+}
