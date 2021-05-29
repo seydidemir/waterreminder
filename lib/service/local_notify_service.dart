@@ -71,6 +71,25 @@ class LocalNotifyManager {
     var iosChannel = IOSNotificationDetails();
     var platformChannel =
         NotificationDetails(android: androidChannel, iOS: iosChannel);
+    await flutterLocalNotificationsPlugin.periodicallyShow(
+        0, "title", "body", RepeatInterval.hourly, platformChannel,
+        payload: 'new payload');
+  }
+
+  Future<void> showHourlyNotification() async {
+    var androidChannel = AndroidNotificationDetails(
+      'channelId',
+      'channelName',
+      'channelDescription',
+      importance: Importance.max,
+      priority: Priority.high,
+      playSound: true,
+      icon: 'app_notification_icon',
+    );
+
+    var iosChannel = IOSNotificationDetails();
+    var platformChannel =
+        NotificationDetails(android: androidChannel, iOS: iosChannel);
     await flutterLocalNotificationsPlugin
         .show(0, "title", "body", platformChannel, payload: 'new payload');
   }

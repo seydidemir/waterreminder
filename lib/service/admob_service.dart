@@ -4,8 +4,8 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class AdMobService {
   static String get bannerAdUnitId => Platform.isAndroid
-      ? 'ca-app-pub-8942670788241027/5716143100'
-      : 'ca-app-pub-8942670788241027/5716143100';
+      ? 'ca-app-pub-8942670788241027/6096891839'
+      : 'ca-app-pub-8942670788241027/6096891839';
   static String get iosInttersttitialAdUnitId => Platform.isAndroid
       ? 'ca-app-pub-8942670788241027/6096891839'
       : 'ca-app-pub-8942670788241027/6096891839';

@@ -108,7 +108,8 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       bottomNavigationBar: Container(
         height: 50,
-        color: Color(0xffF1F1F1),
+        // color: Color(0xffF1F1F1),
+        color: Colors.grey,
         child: AdWidget(
           ad: AdMobService.createBanerAd()..load(),
           key: UniqueKey(),
@@ -376,7 +377,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       shape: CircleBorder(),
                       onPressed: () async {
                         //localNotifyManager.cancelAllNotification();
-                        await localNotifyManager.showDailyNotification();
+                       // await localNotifyManager.showNotification();
                       },
                     ),
                     RawMaterialButton(
