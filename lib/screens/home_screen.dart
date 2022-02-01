@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -5,10 +7,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:waterreminder/models/user.dart';
 import 'package:waterreminder/models/water.dart';
-import 'package:waterreminder/service/admob_service.dart';
-import 'package:waterreminder/service/local_notify_service.dart';
+// import 'package:waterreminder/service/admob_service.dart';
 import 'package:waterreminder/utils/dbHelper.dart';
 import 'package:wave_progress_widget/wave_progress.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
@@ -31,23 +34,63 @@ class _HomeScreenState extends State<HomeScreen> {
   Color borderColor = Colors.blue;
   bool backBtn = false;
   Color iconColor = Colors.white;
+  BannerAd bannerAds;
 
   @override
   void initState() {
     super.initState();
     getUserInfo();
     getDailyWatersAmount();
+    pushService();
 
-    localNotifyManager.setOnNotificationReceive(onNotificationReceive);
-    localNotifyManager.setOnNotificationClick(onNotificationClick);
+    if (Platform.isAndroid) {
+      bannerAds = BannerAd(
+        adUnitId: "ca-app-pub-3940256099942544/6300978111",
+        request: AdRequest(),
+        size: AdSize.banner,
+        listener: BannerAdListener(),
+      );
+    }
+
+    bannerAds?.load();
   }
 
-  onNotificationReceive(ReceiveNotification notification) {
-    print("notification received: ${notification.id}");
+  @override
+  void dispose() {
+    super.dispose();
+
+    bannerAds?.dispose();
+    bannerAds = null;
   }
 
   onNotificationClick(String payload) {
     print("payload $payload");
+  }
+
+  Future<void> pushService() async {
+    if (!mounted) return;
+
+    OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
+    OneSignal.shared.init("dc97ed3c-81cf-4a2d-9269-7da9da81a774", iOSSettings: {
+      OSiOSSettings.autoPrompt: false,
+      OSiOSSettings.inAppLaunchUrl: false,
+    });
+    OneSignal.shared
+        .setInFocusDisplayType(OSNotificationDisplayType.notification);
+
+    try {
+      if (_userRequest != null) {
+        await OneSignal.shared
+            .promptUserForPushNotificationPermission(fallbackToSettings: true);
+        await OneSignal.shared
+            .setExternalUserId("selam" ?? "0")
+            .whenComplete(() {});
+        await OneSignal.shared.sendTag("id", 12 ?? 0).whenComplete(() {});
+        await OneSignal.shared
+            .sendTag("name", ("seydi demir"))
+            .whenComplete(() {});
+      }
+    } catch (e) {}
   }
 
   void getUserInfo() {
@@ -101,19 +144,24 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final AdWidget adWidget = AdWidget(ad: bannerAds);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: const Text('Water Reminder'),
       ),
       bottomNavigationBar: Container(
-        height: 50,
         // color: Color(0xffF1F1F1),
-        color: Colors.grey,
-        child: AdWidget(
-          ad: AdMobService.createBanerAd()..load(),
-          key: UniqueKey(),
-        ),
+
+        // child: AdWidget(
+        //   ad: AdMobService.createBanerAd()..load(),
+        //   key: UniqueKey(),
+        // ),
+
+        alignment: Alignment.center,
+        child: adWidget,
+        width: bannerAds.size.width.toDouble(),
+        height: bannerAds.size.height.toDouble(),
       ),
       body: Container(
         width: MediaQuery.of(context).size.width,
@@ -377,7 +425,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       shape: CircleBorder(),
                       onPressed: () async {
                         //localNotifyManager.cancelAllNotification();
-                       // await localNotifyManager.showNotification();
+                        // await localNotifyManager.showNotification();
                       },
                     ),
                     RawMaterialButton(

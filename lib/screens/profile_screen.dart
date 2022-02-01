@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:load/load.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -127,14 +128,23 @@ class _ProfilScreenState extends State<ProfilScreen> {
                     dailyAmountCalculate();
                   },
                 ),
-                SettingsTile.switchTile(
+                SettingsTile(
                   title: 'Alert',
                   leading: Icon(
                     Icons.notification_add,
                   ),
-                  switchValue: alertValue,
-                  onToggle: (bool value) {
-                    alertValue = !value;
+                  onPressed: (BuildContext context) {
+                    showLoadingDialog();
+                    Navigator.of(context).push(_createRoute());
+
+                    // Fluttertoast.showToast(
+                    //     msg: "Coming Soon",
+                    //     toastLength: Toast.LENGTH_SHORT,
+                    //     gravity: ToastGravity.CENTER,
+                    //     timeInSecForIosWeb: 1,
+                    //     backgroundColor: Colors.red,
+                    //     textColor: Colors.white,
+                    //     fontSize: 16.0);
                   },
                 ),
                 SettingsTile(
@@ -146,6 +156,14 @@ class _ProfilScreenState extends State<ProfilScreen> {
                   onPressed: (BuildContext context) {
                     showLoadingDialog();
                     Navigator.of(context).push(_createRoute());
+                    // Fluttertoast.showToast(
+                    //     msg: "Coming Soon",
+                    //     toastLength: Toast.LENGTH_SHORT,
+                    //     gravity: ToastGravity.CENTER,
+                    //     timeInSecForIosWeb: 1,
+                    //     backgroundColor: Colors.red,
+                    //     textColor: Colors.white,
+                    //     fontSize: 16.0);
                   },
                 ),
                 SettingsTile(
@@ -172,7 +190,16 @@ class _ProfilScreenState extends State<ProfilScreen> {
                     FontAwesome.share_square,
                     color: Colors.blueAccent,
                   ),
-                  onPressed: (BuildContext context) {},
+                  onPressed: (BuildContext context) {
+                    Fluttertoast.showToast(
+                        msg: "Coming Soon",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.CENTER,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.red,
+                        textColor: Colors.white,
+                        fontSize: 16.0);
+                  },
                 ),
                 SettingsTile(
                   title: 'Website',

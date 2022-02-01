@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:waterreminder/main.dart';
 import 'package:waterreminder/screens/home_screen.dart';
+import 'package:waterreminder/screens/login.dart';
+import 'package:waterreminder/service/service.dart';
 import 'package:waterreminder/utils/bottom_navbar.dart';
 
 import 'helper.dart';
@@ -54,7 +56,6 @@ class _AdvancedSplashScreenState extends State<AdvancedSplashScreen>
   @override
   void initState() {
     super.initState();
-    initStartApp();
     buildStopList();
 
     handleScreenReplacement();
@@ -83,14 +84,6 @@ class _AdvancedSplashScreenState extends State<AdvancedSplashScreen>
   void dispose() {
     _animationController.dispose();
     super.dispose();
-  }
-
-  int initScreen = 0;
-
-  void initStartApp() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    initScreen = prefs.getInt('pageState');
   }
 
   @override
@@ -161,19 +154,20 @@ class _AdvancedSplashScreenState extends State<AdvancedSplashScreen>
   }
 
   void handleScreenReplacement() async {
-    // var utoken = await Helper.getShared('token');
+    var utoken = await Helper.getShared('token');
 
-    // if (utoken != null) {
-    //   Service.token = utoken;
-    //   var jresponse = await Service.profile();
+    if (utoken != null) {
+      Service.token = utoken;
+      var jresponse = await Service.profile();
 
-    //   if (jresponse != null && jresponse['status'] == 1) {
-    //     Helper.user = jresponse['data'];
-    //   }
-    // }
+      if (jresponse != null && jresponse['status'] == 1) {
+        Helper.user = jresponse['data'];
+      }
+    }
+
     Timer(Duration(seconds: widget.seconds, milliseconds: widget.milliseconds),
         () {
-      if (initScreen == 1) {
+      if (Helper.user != null) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -184,7 +178,7 @@ class _AdvancedSplashScreenState extends State<AdvancedSplashScreen>
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => OnboardingScreen(),
+            builder: (context) => LoginScreen(),
           ),
         );
       }
